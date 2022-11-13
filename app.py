@@ -178,6 +178,53 @@ def login_page():
   print(request.args)
   return render_template("login.html")
 
+@app.route('/dues')
+def dues():
+  global uid
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Dues")
+  dues = []
+  print("PRINTING DUES")
+  for due in cursor:
+    print(due)
+    if due[3] == uid:
+      dues.append(due)
+  
+  cursor.close()
+
+  context = dict(due_list = dues)
+  return render_template("dues.html", **context)
+
+@app.route('/open_hours')
+def open_hours():
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Open_Hours")
+  open_hours = []
+  print("PRINTING open_hours")
+  for hour in cursor:
+    print(hour)
+    open_hours.append(hour)
+  
+  cursor.close()
+
+  context = dict(hour_list = open_hours)
+  return render_template("open_hours.html", **context)
+
+@app.route('/work_days')
+def work_days():
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Work_Days")
+  work_days = []
+  print("PRINTING work_days")
+  for day in cursor:
+    print(day)
+    work_days.append(day)
+  
+  cursor.close()
+
+  context = dict(day_list = work_days)
+  return render_template("work_days.html", **context)
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
@@ -188,18 +235,22 @@ def add():
   g.conn.execute(text(cmd), name1 = name, name2 = name);
   return redirect('/')
 
-
+uid = -1
 @app.route('/login', methods=['POST'])
 def login():
+  global uid
   print(request.args)
   email = request.form['email']
   phone = request.form['phone']
   print("Submitted Email, Phone :",email,phone)
-  cursor = g.conn.execute("SELECT email, phone FROM Users")
+  cursor = g.conn.execute("SELECT * FROM Users")
+
   for result in cursor:
-    if result[0] == email and result[1] == phone:
+    # print(result)
+    if result[3] == email and result[4] == phone:
       print("Successful login :",result)
-      context = dict(data = result[0])
+      uid = result[0]
+      context = dict(data = result)
       return render_template("user_home.html", **context)
   #   names.append(result['first_name'])  # can also be accessed using result[0]
   # cursor = g.conn.execute("SELECT name FROM test")
