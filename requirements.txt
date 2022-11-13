@@ -25,6 +25,7 @@ numpy @ file:///Users/runner/miniforge3/conda-bld/numpy_1626648422821/work
 olefile @ file:///home/conda/feedstock_root/build_artifacts/olefile_1602866521163/work
 pandas==1.2.4
 Pillow @ file:///Users/runner/miniforge3/conda-bld/pillow_1625678050927/work
+psycopg2==2.9.5
 pybind11==2.7.1
 pycosat @ file:///Users/runner/miniforge3/conda-bld/pycosat_1610094841871/work
 pycparser @ file:///home/conda/feedstock_root/build_artifacts/pycparser_1593275161868/work
