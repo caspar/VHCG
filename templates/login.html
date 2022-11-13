@@ -1,36 +1,33 @@
-{% extends "base.html" %}
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
 
-{% block content %}
-<div class="column is-4 is-offset-4">
-    <h3 class="title">Login</h3>
-    <div class="box">
-        {% with messages = get_flashed_messages() %}
-            {% if messages %}
-                <div class="notification is-danger">
-                    {{ messages[0] }}
-                </div>
-            {% endif %}
-        {% endwith %}
-        <form method="POST" action="/login">
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="email" name="email" placeholder="Your Email" autofocus="">
-                </div>
-            </div>
 
-            <div class="field">
-                <div class="control">
-                    <input class="input is-large" type="password" name="password" placeholder="Your Password">
-                </div>
-            </div>
-            <div class="field">
-                <label class="checkbox">
-                    <input type="checkbox">
-                    Remember me
-                </label>
-            </div>
-            <button class="button is-block is-info is-large is-fullwidth">Login</button>
-        </form>
-    </div>
-</div>
-{% endblock %}
+<body>
+  <h1>Vinegar Hill Community Garden</h1>
+  <h2>User Login</h2>
+  <!-- <div>{{data}}</div> -->
+
+  <!-- <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div> -->
+
+<!-- <p><a href="/another">Go to the other page</a></p> -->
+
+<form method="POST" action="/login">
+<p>Email: <input type="text" name="email"> </p>
+<p>Phone: <input type="text" name="phone"> </p>
+<p><input type="submit" value="Login"></p>
+
+</form>
+
+</body>
+
+
+</html>
