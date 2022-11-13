@@ -20,8 +20,15 @@ from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
 
+
+
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
+
+
+def create_app():
+   return app
+
 
 
 
@@ -165,6 +172,7 @@ def index():
   # return render_template("index.html", **context)
   return render_template("index.html")
 
+ 
 #
 # This is an example of a different path.  You can see it at
 # 
