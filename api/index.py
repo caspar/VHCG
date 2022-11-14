@@ -1,11 +1,31 @@
+#!/usr/bin/env python2.7
+
+"""
+Columbia W4111 Intro to databases
+Example webserver
+
+To run locally
+
+    python server.py
+
+Go to http://localhost:8111 in your browser
+
+
+A debugger such as "pdb" may be helpful for debugging.
+Read about it online.
+"""
+
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
 
-app = Flask(__name__)
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+app = Flask(__name__, template_folder=tmpl_dir)
 
-   # XXX: The Database URI should be in the format of: 
+
+
+# XXX: The Database URI should be in the format of: 
 #
 #     postgresql://USER:PASSWORD@<IP_OF_POSTGRE_SQL_SERVER>/<DB_NAME>
 #
@@ -38,7 +58,7 @@ engine.execute("""CREATE TABLE IF NOT EXISTS test (
 );""")
 engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
 
-
+uid = -1
 
 @app.before_request
 def before_request():
@@ -143,9 +163,8 @@ def index():
   # for example, the below file reads template/index.html
   #
   # return render_template("index.html", **context)
-  return render_template("index2.html")
+  return render_template("index.html")
 
- 
 #
 # This is an example of a different path.  You can see it at
 # 
@@ -154,15 +173,10 @@ def index():
 # notice that the functio name is another() rather than index()
 # the functions for each app.route needs to have different names
 #
-@app.route('/login')
-def login():
+@app.route('/login_page')
+def login_page():
   print(request.args)
   return render_template("login.html")
-
-@app.route('/register')
-def register():
-  print(request.args)
-  return render_template("register.html")
 
 @app.route('/dues')
 def dues():
@@ -180,6 +194,22 @@ def dues():
 
   context = dict(due_list = dues)
   return render_template("dues.html", **context)
+
+@app.route('/plot_waitlist')
+def plot_waitlist():
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Plot_Waitlist")
+  waitlist = []
+  print("PRINTING waitlist")
+  for rank in cursor:
+    print(rank)
+    waitlist.append(rank)
+  
+  cursor.close()
+
+  context = dict(wait_list = waitlist)
+  return render_template("plot_waitlist.html", **context)
+
 
 @app.route('/open_hours')
 def open_hours():
@@ -200,58 +230,114 @@ def open_hours():
 def workdays():
   print(request.args)
   cursor = g.conn.execute("SELECT * FROM Work_Days")
-  workdays = []
-  print("PRINTING workdays")
+  wd_signups = g.conn.execute("SELECT * FROM Work_Days W, Work_Day_Signups S WHERE W.work_date = S.work_date")
+  print("PRINTING SIGNUPS!!!!!!")
+
+  work_day_signups = {}
+  for signup in wd_signups:
+    print(signup)
+    if signup[0] in work_day_signups.keys():
+      work_day_signups[signup[0]].append(signup[3])
+    else:
+      work_day_signups[signup[0]] = [signup[3]]
+
+  work_days = []
+  print("PRINTING work_days")
   for day in cursor:
     print(day)
-    workdays.append(day)
+    if day[0] in work_day_signups.keys():
+      work_days.append((day,work_day_signups[day[0]]))
+    else:
+      work_days.append((day,[]))
   
   cursor.close()
 
-  context = dict(day_list = workdays)
+  context = dict(day_list = work_days)
   return render_template("workdays.html", **context)
-
-@app.route('/clone')
-def clone():
-  print(request.args)
-  return render_template("index2.html")
 
 
 # Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-  name = request.form['name']
-  print(name)
-  cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
-  g.conn.execute(text(cmd), name1 = name, name2 = name);
-  return redirect('/')
+@app.route('/add_to_waitlist', methods=['POST'])
+def add_to_waitlist():
+  cursor = g.conn.execute("SELECT COUNT(*) FROM Plot_Waitlist")
+  print("PRINTING WAITLIST LENGTH!!!")
+  for num in cursor:
+    print(num)
+  cmd = 'INSERT INTO Plot_Waitlist VALUES (' + str(uid) + ', ' + str(num[0]+1)+')';
+  g.conn.execute(text(cmd));
+  return redirect('/plot_waitlist')
 
-uid = -1
-@app.route('/login2', methods=['POST'])
-def login2():
+@app.route('/register_work_date')
+def register_work_date():
   global uid
+  print(request.args)
+  work_date = request.args.get('work_date', None)
+  print("PRINTING WORKDATE!!!")
+  print(work_date)
+  print(type(work_date))
+  print(str(work_date))
+  try:
+    cmd = 'INSERT INTO Work_Day_Signups VALUES '+"('"+str(work_date)+"',"+ str(uid)+')';
+    g.conn.execute(text(cmd));
+  except:
+    print("Error Signing up:",work_date,uid)
+
+  return redirect('/workdays')
+
+@app.route('/login', methods=['POST'])
+def login():
+  global uid, mem_uids, lead_uids, user_details
   print(request.args)
   email = request.form['email']
   phone = request.form['phone']
   print("Submitted Email, Phone :",email,phone)
   cursor = g.conn.execute("SELECT * FROM Users")
-
+  members = g.conn.execute("SELECT uid FROM Members")
+  mem_uids = [x[0] for x in members]
+  print("Members :",mem_uids)
+  leaders = g.conn.execute("SELECT uid FROM Leadership")
+  lead_uids = [x[0] for x in leaders]
+  users = []
   for result in cursor:
-    # print(result)
+    users.append(result)
+    print(result)
     if result[3] == email and result[4] == phone:
       print("Successful login :",result)
       uid = result[0]
-      context = dict(data = result)
-      return render_template("home.html", **context)
+      user_details = dict(data = result)
+
+      if uid in lead_uids:
+        cursor.close()
+        return render_template("leader_home.html", **user_details)  
+
+      if uid in mem_uids:
+        cursor.close()
+        return render_template("member_home.html", **user_details)  
+      
+      else:
+        cursor.close()
+        return render_template("user_home.html", **user_details)
   #   names.append(result['first_name'])  # can also be accessed using result[0]
   # cursor = g.conn.execute("SELECT name FROM test")
   # for result in cursor:
   #   names.append(result['name'])
   cursor.close()
+  print("Num Users =",len(users))
   print("Login Unsuccessful!")
-  return redirect('/login')
+  return redirect('/login_page')
+  
+@app.route('/home')
+def home():
+  global uid, mem_uids, lead_uids, user_details
+  if uid in lead_uids:
+    return render_template("leader_home.html", **user_details)  
 
-
+  if uid in mem_uids:
+    return render_template("member_home.html", **user_details)  
+  
+  else:
+    return render_template("user_home.html", **user_details)
+  
 
 if __name__ == "__main__":
   import click

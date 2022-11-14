@@ -9,13 +9,13 @@
 
 <body>
   <form action="/home"><input type="submit" value="Go Back"></form>
-
-  <h1>Due Payments</h1>
+  
+  <h1>Plot Waitlist</h1>
   <!-- <div>{{data}}</div> -->
-
+  <form action="/add_to_waitlist" method="POST"><button type="submit">Apply</button></form>
   <div>
-    {% for due in due_list %}
-    <div>{{due}}</div>
+    {% for rank in wait_list %}
+    <div>{{rank}}</div>
     {% endfor %}
   </div>
 

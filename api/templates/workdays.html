@@ -8,27 +8,39 @@
 
 
 <body>
-  <button onclick="back()">Go Back</button>
-
-  <script>
+  <form action="/home"><input type="submit" value="Go Back"></form>
+  
+  <!-- <script>
   function back() {
     window.history.back();
   }
-  </script>
+  </script> -->
   
   <h1>Work Days</h1>
   <!-- <div>{{data}}</div> -->
 
+
   <div>
     {% for day in day_list %}
-    <div>{{day}}</div>
+    <details>
+      <summary >{{day[0]}}</summary>
+      <a href="{{ url_for('register_work_date', work_date=day[0][0]) }}">Join</a>
+      <p>Currently registered members : {{day[1]}}</p>
+    </details>
     {% endfor %}
   </div>
 
 <!-- <p><a href="/home">Back</a></p> -->
 
-<!-- <form method="POST" action="/add">
-<p>Name of new user: <input type="text" name="name"> <input type="submit" value="Add"></p>
+
+
+<!-- <form method="POST" action="/register_work_day">
+  <div>
+    {% for day in day_list %}
+    <div><input type="text" name="name"> <input type="submit" value="Add">{{day}}</div>
+    {% endfor %}
+  </div>
+<p>Name of new user: </p>
 </form> -->
 
 </body>
