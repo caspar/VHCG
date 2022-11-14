@@ -5,22 +5,6 @@ from flask import Flask, request, render_template, g, redirect, Response
 
 app = Flask(__name__)
 
-
-# @app.route('/')
-# def hello():
-#     return 'Hello, world'
-
-
-@app.route('/test')
-def test():
-    return 'Test'
-
-@app.route('/result')
-def result():
-   dict = {'phy':50,'che':60,'maths':70}
-   return render_template('result.html', result = dict)
-
-
    # XXX: The Database URI should be in the format of: 
 #
 #     postgresql://USER:PASSWORD@<IP_OF_POSTGRE_SQL_SERVER>/<DB_NAME>
@@ -222,6 +206,11 @@ def work_days():
   context = dict(day_list = work_days)
   return render_template("work_days.html", **context)
 
+@app.route('/clone')
+def clone():
+  print(request.args)
+  return render_template("index2.html")
+
 
 # Example of adding new data to the database
 @app.route('/add', methods=['POST'])
@@ -256,7 +245,8 @@ def login():
   cursor.close()
   print("Login Unsuccessful!")
   return redirect('/login_page')
-  
+
+
 
 if __name__ == "__main__":
   import click
