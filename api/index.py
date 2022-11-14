@@ -3,7 +3,9 @@ from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response
 
-app = Flask(__name__)
+tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
+app = Flask(__name__, template_folder=tmpl_dir)
+
 
    # XXX: The Database URI should be in the format of: 
 #
@@ -28,16 +30,6 @@ DATABASEURI = "postgresql://"+DB_USER+":"+DB_PASSWORD+"@"+DB_SERVER+"/proj1part2
 # This line creates a database engine that knows how to connect to the URI above
 #
 engine = create_engine(DATABASEURI)
-
-
-# Here we create a test table and insert some values in it
-engine.execute("""DROP TABLE IF EXISTS test;""")
-engine.execute("""CREATE TABLE IF NOT EXISTS test (
-  id serial,
-  name text
-);""")
-engine.execute("""INSERT INTO test(name) VALUES ('grace hopper'), ('alan turing'), ('ada lovelace');""")
-
 
 
 @app.before_request
@@ -143,7 +135,7 @@ def index():
   # for example, the below file reads template/index.html
   #
   # return render_template("index.html", **context)
-  return render_template("index2.html")
+  return render_template("index.html")
 
  
 #
@@ -154,6 +146,7 @@ def index():
 # notice that the functio name is another() rather than index()
 # the functions for each app.route needs to have different names
 #
+uid = -1
 @app.route('/login')
 def login():
   print(request.args)
@@ -200,16 +193,72 @@ def open_hours():
 def workdays():
   print(request.args)
   cursor = g.conn.execute("SELECT * FROM Work_Days")
-  workdays = []
-  print("PRINTING workdays")
+  wd_signups = g.conn.execute("SELECT * FROM Work_Days W, Work_Day_Signups S WHERE W.work_date = S.work_date")
+  print("PRINTING SIGNUPS!!!!!!")
+
+  work_day_signups = {}
+  for signup in wd_signups:
+    print(signup)
+    if signup[0] in work_day_signups.keys():
+      work_day_signups[signup[0]].append(signup[3])
+    else:
+      work_day_signups[signup[0]] = [signup[3]]
+
+  work_days = []
+  print("PRINTING work_days")
   for day in cursor:
     print(day)
-    workdays.append(day)
+    if day[0] in work_day_signups.keys():
+      work_days.append((day,work_day_signups[day[0]]))
+    else:
+      work_days.append((day,[]))
   
   cursor.close()
 
-  context = dict(day_list = workdays)
+  context = dict(day_list = work_days)
   return render_template("workdays.html", **context)
+
+@app.route('/register_work_date')
+def register_work_date():
+  global uid
+  print(request.args)
+  work_date = request.args.get('work_date', None)
+  print("PRINTING WORKDATE!!!")
+  print(work_date)
+  print(type(work_date))
+  print(str(work_date))
+  try:
+    cmd = 'INSERT INTO Work_Day_Signups VALUES '+"('"+str(work_date)+"',"+ str(uid)+')';
+    g.conn.execute(text(cmd));
+  except:
+    print("Error Signing up:",work_date,uid)
+
+  return redirect('/workdays')
+
+@app.route('/plot_waitlist')
+def plot_waitlist():
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Plot_Waitlist")
+  waitlist = []
+  print("PRINTING waitlist")
+  for rank in cursor:
+    print(rank)
+    waitlist.append(rank)
+  
+  cursor.close()
+
+  context = dict(wait_list = waitlist)
+  return render_template("plot_waitlist.html", **context)
+
+@app.route('/add_to_waitlist', methods=['POST'])
+def add_to_waitlist():
+  cursor = g.conn.execute("SELECT COUNT(*) FROM Plot_Waitlist")
+  print("PRINTING WAITLIST LENGTH!!!")
+  for num in cursor:
+    print(num)
+  cmd = 'INSERT INTO Plot_Waitlist VALUES (' + str(uid) + ', ' + str(num[0]+1)+')';
+  g.conn.execute(text(cmd));
+  return redirect('/plot_waitlist')
 
 @app.route('/clone')
 def clone():
@@ -226,32 +275,59 @@ def add():
   g.conn.execute(text(cmd), name1 = name, name2 = name);
   return redirect('/')
 
-uid = -1
+
 @app.route('/check_login', methods=['POST'])
 def check_login():
-  global uid
+  global uid, mem_uids, lead_uids, user_details
   print(request.args)
   email = request.form['email']
   phone = request.form['phone']
   print("Submitted Email, Phone :",email,phone)
   cursor = g.conn.execute("SELECT * FROM Users")
 
+  members = g.conn.execute("SELECT uid FROM Members")
+  mem_uids = [x[0] for x in members]
+  # print("Members :",mem_uids)
+  leaders = g.conn.execute("SELECT uid FROM Leadership")
+  lead_uids = [x[0] for x in leaders]
+
+  print("CHECKING LOGIN", flush=True)
   for result in cursor:
-    # print(result)
+    
+  
+    print(result)
     if result[3] == email and result[4] == phone:
       print("Successful login :",result)
       uid = result[0]
-      context = dict(data = result)
-      return render_template("home.html", **context)
-  #   names.append(result['first_name'])  # can also be accessed using result[0]
-  # cursor = g.conn.execute("SELECT name FROM test")
-  # for result in cursor:
-  #   names.append(result['name'])
+      user_details = dict(data = result)
+
+      if uid in lead_uids:
+        cursor.close()
+        return render_template("leader_home.html", **user_details)  
+
+      if uid in mem_uids:
+        cursor.close()
+        return render_template("member_home.html", **user_details)  
+      
+      else:
+        cursor.close()
+        return render_template("user_home.html", **user_details)
+
   cursor.close()
   print("Login Unsuccessful!")
   return redirect('/login')
 
+@app.route('/home')
+def home():
+  global uid, mem_uids, lead_uids, user_details
+  if uid in lead_uids:
+    return render_template("leader_home.html", **user_details)  
 
+  if uid in mem_uids:
+    return render_template("member_home.html", **user_details)  
+  
+  else:
+    return render_template("user_home.html", **user_details)
 
 if __name__ == "__main__":
   import click

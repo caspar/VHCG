@@ -1,0 +1,31 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <form action="/home"><input type="submit" value="Go Back"></form>
+  
+  <h1>Plot Waitlist</h1>
+  <!-- <div>{{data}}</div> -->
+  <form action="/add_to_waitlist" method="POST"><button type="submit">Apply</button></form>
+  <div>
+    {% for rank in wait_list %}
+    <div>{{rank}}</div>
+    {% endfor %}
+  </div>
+
+<!-- <p><a href="/home">Back</a></p> -->
+
+<!-- <form method="POST" action="/add">
+<p>Name of new user: <input type="text" name="name"> <input type="submit" value="Add"></p>
+</form> -->
+
+</body>
+
+
+</html>
