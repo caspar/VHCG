@@ -227,7 +227,7 @@ def add():
   return redirect('/')
 
 uid = -1
-@app.route('/check_login', methods=['GET'])
+@app.route('/check_login', methods=['POST'])
 def check_login():
   global uid
   print(request.args)
