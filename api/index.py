@@ -154,8 +154,8 @@ def index():
 # notice that the functio name is another() rather than index()
 # the functions for each app.route needs to have different names
 #
-@app.route('/login_page')
-def login_page():
+@app.route('/login')
+def login():
   print(request.args)
   return render_template("login.html")
 
@@ -191,20 +191,20 @@ def open_hours():
   context = dict(hour_list = open_hours)
   return render_template("open_hours.html", **context)
 
-@app.route('/work_days')
-def work_days():
+@app.route('/workdays')
+def workdays():
   print(request.args)
   cursor = g.conn.execute("SELECT * FROM Work_Days")
-  work_days = []
-  print("PRINTING work_days")
+  workdays = []
+  print("PRINTING workdays")
   for day in cursor:
     print(day)
-    work_days.append(day)
+    workdays.append(day)
   
   cursor.close()
 
-  context = dict(day_list = work_days)
-  return render_template("work_days.html", **context)
+  context = dict(day_list = workdays)
+  return render_template("workdays.html", **context)
 
 @app.route('/clone')
 def clone():
@@ -237,14 +237,14 @@ def login():
       print("Successful login :",result)
       uid = result[0]
       context = dict(data = result)
-      return render_template("user_home.html", **context)
+      return render_template("home.html", **context)
   #   names.append(result['first_name'])  # can also be accessed using result[0]
   # cursor = g.conn.execute("SELECT name FROM test")
   # for result in cursor:
   #   names.append(result['name'])
   cursor.close()
   print("Login Unsuccessful!")
-  return redirect('/login_page')
+  return redirect('/login')
 
 
 
