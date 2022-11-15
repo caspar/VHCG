@@ -140,8 +140,8 @@ def login():
   print(request.args)
   return render_template("login.html")
 
-@app.route('/login')
-def login():
+@app.route('/cover')
+def cover():
   print(request.args)
   return render_template("cover.html")
 
