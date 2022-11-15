@@ -51,23 +51,24 @@
       <div class="container">
         <ul class="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/signout">💨 Sign Out</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/home">🏠 Home</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" onclick="back()">🔙 Go Back</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/home">🔙 Go Back</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/">💨 Sign Out</a></li>
         </ul>
       </div>
     </nav>
   </div>
 
   <div class="container">
-    <h2>Open Hours Signup</h2>
+    <h2>Open Hours</h2>
   </div>
   <!-- <div>{{data}}</div> -->
 
 
   <div class="container">
     {% for hour in hour_list %}
-    <div>{{hour}}</div>
+    <!-- <div>{{hour}}</div> -->
+    <div>{{hour[0]}}. {{hour[1]}}</div>
     {% endfor %}
   </div>
 

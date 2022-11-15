@@ -1,32 +1,74 @@
 <html>
-  <style>
-    body{ 
-      font-size: 15pt;
-      font-family: arial;
-    }
-  </style>
-
-<head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/water.css">
-  <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
-</head>
+  <head>
+    <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Vinegar Hill Community Garden</title>
+    <!-- <meta name="description" content="">
+    <meta name="author" content=""> -->
+    
+    <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    
+    <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <!-- <link rel="stylesheet" href="api/css/normalize.css">
+    <link rel="stylesheet" href="api/css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
+    
+    
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
+    
+    
+    <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    
+    <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <link rel="stylesheet" href="css/github-prettify-theme.css">
+    <script src="js/site.js"></script>
+    
+    </head>
 
 <body>
-  <button onclick="back()">Go Back</button>
 
   <script>
   function back() {
     window.history.back();
   }
   </script>
-  
-  <h1>Due Payments</h1>
+
+  <div class="container">
+    <!-- <div class="navbar-spacer"></div> -->
+    <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/home">🔙 Go Back</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/">💨 Sign Out</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h2>Payments Due</h2>
+  </div>
   <!-- <div>{{data}}</div> -->
 
-  <div>
+
+  <div class="container">
     {% for due in due_list %}
-    <div>{{due}}</div>
+    <!-- <div>{{due}}</div> -->
+    <div>{{due[0]}}.) Amount = ${{due[1]}} | Due Date = {{due[2]}} | Manager = {{due[3]}}</div>
     {% endfor %}
   </div>
 

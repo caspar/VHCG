@@ -157,10 +157,16 @@ def dues():
   cursor = g.conn.execute("SELECT * FROM Dues")
   dues = []
   print("PRINTING DUES")
+  i=1
   for due in cursor:
     if due[3] == uid:
       print(due)
-      dues.append(due)
+      managers = g.conn.execute("SELECT first_name, last_name FROM Users WHERE uid = " + str(due[4]))
+      due_date = str(due[2].year) + "/" + str(due[2].month) + "/" + str(due[2].day)
+      for manager in managers:
+        pay = (i,due[1],due_date,manager[0]+" "+manager[1])
+      dues.append(pay)
+      i=i+1
   
   cursor.close()
 
@@ -173,9 +179,14 @@ def open_hours():
   cursor = g.conn.execute("SELECT * FROM Open_Hours")
   open_hours = []
   print("PRINTING open_hours")
+  i=1
   for hour in cursor:
-    print(hour)
-    open_hours.append(hour)
+    slot = str(hour[1].year)+"/"+str(hour[1].month)+"/"+str(hour[1].day) + " - " + str(hour[1].hour)+":"+str(hour[1].minute) + " to " + str(hour[2].hour)+":"+str(hour[2].minute)
+    # print(str(hour[1].year)+"/"+str(hour[1].month)+"/"+str(hour[1].day))
+    # print(str(hour[1].hour)+":"+str(hour[1].minute))
+    print(slot)
+    open_hours.append((i,slot))
+    i = i+1
   
   cursor.close()
 
@@ -201,23 +212,25 @@ def open_hours_attend():
 def workdays():
   print(request.args)
   cursor = g.conn.execute("SELECT * FROM Work_Days")
-  wd_signups = g.conn.execute("SELECT * FROM Work_Days W, Work_Day_Signups S WHERE W.work_date = S.work_date")
+  wd_signups = g.conn.execute("SELECT * FROM Work_Days W, Work_Day_Signups S, Users U WHERE W.work_date = S.work_date AND S.uid = U.uid")
   print("PRINTING SIGNUPS!!!!!!")
 
   work_day_signups = {}
   for signup in wd_signups:
     print(signup)
+    signup_name = signup[5] + " " + signup[6] + " (" + str(signup[3]) + ")"
     if signup[0] in work_day_signups.keys():
-      work_day_signups[signup[0]].append(signup[3])
+      work_day_signups[signup[0]].append(signup_name)
     else:
-      work_day_signups[signup[0]] = [signup[3]]
+      work_day_signups[signup[0]] = [signup_name]
 
   work_days = []
   print("PRINTING work_days")
   for day in cursor:
     print(day)
     if day[0] in work_day_signups.keys():
-      work_days.append((day,work_day_signups[day[0]]))
+      workdate = str(day[0].year) + "/" + str(day[0].month) + "/" + str(day[0].day)
+      work_days.append(((workdate,day[1]),work_day_signups[day[0]]))
     else:
       work_days.append((day,[]))
   
@@ -232,9 +245,9 @@ def register_work_date():
   print(request.args)
   work_date = request.args.get('work_date', None)
   print("PRINTING WORKDATE!!!")
-  print(work_date)
-  print(type(work_date))
-  print(str(work_date))
+  # print(work_date)
+  # print(type(work_date))
+  # print(str(work_date))
   try:
     cmd = 'INSERT INTO Work_Day_Signups VALUES '+"('"+str(work_date)+"',"+ str(uid)+')';
     g.conn.execute(text(cmd));
@@ -246,12 +259,13 @@ def register_work_date():
 @app.route('/plot_waitlist')
 def plot_waitlist():
   print(request.args)
-  cursor = g.conn.execute("SELECT * FROM Plot_Waitlist")
+  cursor = g.conn.execute("SELECT * FROM Plot_Waitlist P, Users U WHERE P.uid = U.uid")
   waitlist = []
   print("PRINTING waitlist")
   for rank in cursor:
     print(rank)
-    waitlist.append(rank)
+    rankname = str(rank[3]) + " " + str(rank[4]) + " (" + str(rank[0]) + ")"
+    waitlist.append((rank[1],rankname))
   
   cursor.close()
 
@@ -265,7 +279,10 @@ def add_to_waitlist():
   for num in cursor:
     print(num)
   cmd = 'INSERT INTO Plot_Waitlist VALUES (' + str(uid) + ', ' + str(num[0]+1)+')';
-  g.conn.execute(text(cmd));
+  try:
+    g.conn.execute(text(cmd));
+  except:
+    print("ERROR ADDING TO WAITLIST",uid)
   return redirect('/plot_waitlist')
 
 @app.route('/add_new_user', methods=['POST'])
