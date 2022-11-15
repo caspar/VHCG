@@ -158,8 +158,8 @@ def dues():
   dues = []
   print("PRINTING DUES")
   for due in cursor:
-    print(due)
     if due[3] == uid:
+      print(due)
       dues.append(due)
   
   cursor.close()
@@ -181,6 +181,21 @@ def open_hours():
 
   context = dict(hour_list = open_hours)
   return render_template("open_hours.html", **context)
+
+@app.route('/open_hours_attend')
+def open_hours_attend():
+  print(request.args)
+  cursor = g.conn.execute("SELECT * FROM Does")
+  does = []
+  print("PRINTING does")
+  for done in cursor:
+    print(done)
+    does.append(done)
+  
+  cursor.close()
+
+  context = dict(does_list = does)
+  return render_template("open_hours_attend.html", **context)
 
 @app.route('/workdays')
 def workdays():
@@ -256,16 +271,27 @@ def add_to_waitlist():
 @app.route('/add_new_user', methods=['POST'])
 def add_new_user():
   print(request.args)
+  first = request.form['first']
+  last = request.form['last']
+  email = request.form['email']
+  phone = request.form['phone']
+  address = request.form['address']
+  password = request.form['password']
+  print("Registering New User :",request.form)
+  cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))';
+  g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password);
+  return redirect('/login')
 
 
 # Example of adding new data to the database
-@app.route('/add', methods=['POST'])
-def add():
-  name = request.form['name']
-  print(name)
-  cmd = 'INSERT INTO test(name) VALUES (:name1), (:name2)';
-  g.conn.execute(text(cmd), name1 = name, name2 = name);
-  return redirect('/')
+@app.route('/update_open_hours', methods=['POST'])
+def update_open_hours():
+  userid = request.form['uid']
+  hours_id = request.form['hours_id']
+  print("UPDATING OPEN HOURS :",userid,hours_id)
+  cmd = 'INSERT INTO Does VALUES ((:v1), (:v2))';
+  g.conn.execute(text(cmd), v1 = userid, v2 = hours_id);
+  return redirect('/open_hours_attend')
 
 
 @app.route('/check_login', methods=['POST'])
@@ -273,8 +299,8 @@ def check_login():
   global uid, mem_uids, lead_uids, user_details
   print(request.args)
   email = request.form['email']
-  phone = request.form['phone']
-  print("Submitted Email, Phone :",email,phone)
+  password = request.form['password']
+  print("Submitted Email, password :",email,password)
   cursor = g.conn.execute("SELECT * FROM Users")
 
   members = g.conn.execute("SELECT uid FROM Members")
@@ -286,7 +312,7 @@ def check_login():
   print("CHECKING LOGIN", flush=True)
   for result in cursor:
     print(result)
-    if result[3] == email and result[4] == phone:
+    if result[3] == email and result[6] == password:
       print("Successful login :",result)
       uid = result[0]
       user_details = dict(data = result)
