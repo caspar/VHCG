@@ -45,8 +45,7 @@
         <ul class="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
           <li class="navbar-item navbar-right"><a class="navbar-link" href="/signout">💨 Sign Out</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/member_home">📝 Profile</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
+          <il class="navbar-item navbar-right"><a class="navbar-link" href="/member_home">📝 Profile</a></li>
         </ul>
       </div>
     </nav>
@@ -58,12 +57,19 @@
 
 <div class="container">
   <div class="row">
-    <button href="/dues">Pay Dues</button>
-    <button href="/open_hours">Open Hours Sign-Up</button>
-    <button href="/workdats"> Workday Sign-Up</button>
-    <button href="plot_waitlist"> Apply for a Plot</button>
-    <button href="change_password"> Change Password</button>
+      <a class="button button-primary" href="/open_hours">Open Hours Sign-Up</a>
+      <a class="button button-primary" href="/workdays"> Workday Sign-Up</a>
+      <a class="button button-primary" href="/dues">Pay Dues</a>
   </div>
+  <div class="row">
+    <a class="button" href="plot_waitlist"> Apply for a Plot</a>
+    <a class="button" href="change_password"> Change Password</a>
+  </div>
+</div>
+
+
+<div class="container u-max-full-width">
+  <img src="../static/img/garden-diagram.svg">
 </div>
 
 <!-- <form method="POST" action="/login">
