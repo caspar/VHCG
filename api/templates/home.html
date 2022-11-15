@@ -1,0 +1,55 @@
+
+This is the user home!
+//sign up for things here
+//pay dues
+
+<form action="https://www.paypal.com/donate" method="post" target="_top">
+    <!-- Identify your business so that you can collect the payments. -->
+    <input type="hidden" name="business" value="donations@kcparkfriends.org">
+    <!-- Specify details about the contribution -->
+    <input type="hidden" name="no_recurring" value="0">
+    <input type="hidden" name="item_name" value="Friends of the Park">
+    <input type="hidden" name="item_number" value="Fall Cleanup Campaign">
+    <input type="hidden" name="currency_code" value="USD">
+    <!-- Display the payment button. -->
+    <input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate">
+    <img alt="" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
+   </form>
+
+
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <h1>Welcome!</h1>
+  <h2>{{data[1]}}</h2>
+  <!-- <div>{{data}}</div> -->
+
+  <!-- <div>
+    {% for n in data %}
+    <div>{{n}}</div>
+    {% endfor %}
+  </div> -->
+
+<p><a href="/dues">Pay Dues</a></p>
+<p><a href="/open_hours">Sign up for Open Hours</a></p>
+<p><a href="/workdays">Sign up for Work Days</a></p>
+
+<!-- <form method="POST" action="/login">
+<p>Email: <input type="text" name="email"> </p>
+<p>Phone: <input type="text" name="phone"> </p>
+<p><input type="submit" value="Login"></p>
+
+</form> -->
+
+</body>
+
+
+</html>
+

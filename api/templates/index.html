@@ -1,20 +1,122 @@
 <html>
-  <style>
+  <!-- <style>
     body{ 
       font-size: 15pt;
       font-family: arial;
     }
-  </style>
+  </style> -->
+
 <head>
-  <link rel="stylesheet" href="https://cdn.jsdelivr.net/npm/water.css@2/out/light.css">
+
+  <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <meta charset="utf-8">
+  <title>Vinegar Hill Community Garden</title>
+  <!-- <meta name="description" content="">
+  <meta name="author" content=""> -->
+
+  <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
+  <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <!-- <link rel="stylesheet" href="api/css/normalize.css">
+  <link rel="stylesheet" href="api/css/skeleton.css">
+  <link rel="stylesheet" href="css/custom.css"> -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+  <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
+
+
+  <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
+
+  
+  <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+  
+  <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
+
+  <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+  <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+  <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+  <link rel="stylesheet" href="css/github-prettify-theme.css">
+  <script src="js/site.js"></script>
+
 </head>
 
 
-<body>
-  <h1>Vinegar Hill Community Garden</h1>
-  <h2>199 York Stret Brooklyn, NY</h2>
+<body class="code-snippets-visible">
+  <div class="container">
+    <!-- <div class="navbar-spacer"></div> -->
+    <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/register">📝 Sign Up</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/login">🌳 Log In</a></li>
+        </ul>
+      </div>
+    </nav>
+
+    <!-- Grid
+    <div class="docs-section" id="grid">
+      <h6 class="docs-header">The grid</h6>
+      <p>The grid is a <u>12-column fluid grid with a max width of 960px</u>, that shrinks with the browser/device at smaller sizes. The max width can be changed with one line of CSS and all columns will resize accordingly. The syntax is simple and it makes coding responsive much easier. Go ahead, resize the browser. </p>
+      <div class="example-grid docs-example">
+        <div class="row">
+          <div class="one column">One</div>
+          <div class="eleven columns">Eleven</div>
+        </div>
+        <div class="row">
+          <div class="two columns">Two</div>
+          <div class="ten columns">Ten</div>
+        </div>
+        <div class="row">
+          <div class="three columns">Three</div>
+          <div class="nine columns">Nine</div>
+        </div>
+        <div class="row">
+          <div class="four columns">Four</div>
+          <div class="eight columns">Eight</div>
+        </div>
+        <div class="row">
+          <div class="five columns">Five</div>
+          <div class="seven columns">Seven</div>
+        </div>
+        <div class="row">
+          <div class="six columns">Six</div>
+          <div class="six columns">Six</div>
+        </div>
+        <div class="row">
+          <div class="seven columns">Seven</div>
+          <div class="five columns">Five</div>
+        </div>
+        <div class="row">
+          <div class="eight columns">Eight</div>
+          <div class="four  columns">Four</div>
+        </div>
+        <div class="row">
+          <div class="nine columns">Nine</div>
+          <div class="three columns">Three</div>
+        </div>
+        <div class="row">
+          <div class="ten columns">Ten</div>
+          <div class="two columns">Two</div>
+        </div>
+        <div class="row">
+          <div class="eleven columns">Eleven</div>
+          <div class="one column">One</div>
+        </div>
+      </div> -->
+
+
+
+  <div class="container">
+    <h2>Vinegar Hill Community Garden</h1>
+    <h4>199 York Street Brooklyn, NY</h2>
+  </div>
 
   <!-- <div>{{data}}</div> -->
 
@@ -23,18 +125,15 @@
     <div>{{n}}</div>
     {% endfor %}
   </div> -->
-<div>
-  <p><a href="/login">Login</a></p>
-  <p><a href="/register">Sign Up</a></p>
-</div>
 
-<div class="embedsocial-hashtag" data-ref="dcde553604e80bd22346d07d7d5c5774e3ce6dc5"> <a class="feed-powered-by-es feed-powered-by-es-feed-new" href="https://embedsocial.com/social-media-aggregator/" target="_blank" title="Widget by EmbedSocial"> Widget by EmbedSocial<span>→</span> </a> </div> <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script>
+
+<div class="embedsocial-hashtag" data-ref="dcde553604e80bd22346d07d7d5c5774e3ce6dc5"> <a class="feed-powered-by-es feed-powered-by-es-feed-new" href="https://embedsocial.com/social-media-aggregator/" target="_blank" title="Social"><span>→</span> </a> </div> <script> (function(d, s, id) { var js; if (d.getElementById(id)) {return;} js = d.createElement(s); js.id = id; js.src = "https://embedsocial.com/cdn/ht.js"; d.getElementsByTagName("head")[0].appendChild(js); }(document, "script", "EmbedSocialHashtagScript")); </script>
 
 
 <!-- <form method="POST" action="/add">
 <p>Name of new user: <input type="text" name="name"> <input type="submit" value="Add"></p>
 </form> -->
-
+</div>
 </body>
 
 

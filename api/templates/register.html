@@ -25,12 +25,21 @@
 
 <!-- <p><a href="/another">Go to the other page</a></p> -->
 
-<form method="POST" action="/register">
-<p>First Name: <input type="text" name="email"> </p>
-<p>Last Name: <input type="text" name="email"> </p>
-<p>Email: <input type="text" name="email"> </p>
-<p>Phone: <input type="text" name="phone"> </p>
-<p><input type="submit" value="Login"></p>
+<form method="POST" action="/add_new_user">
+<p><input type="text" name="first" placeholder="First Name" required> </p>
+<p><input type="text" name="last" placeholder="Last Name" > </p>
+<p><input type="email" name="email"  placeholder="Email Address" pattern="(?!(^[.-].*|[^@]*[.-]@|.*\.{2,}.*)|^.{254}.)([a-zA-Z0-9!#$%&'*+\/=?^_`{|}~.-]+@)(?!-.*|.*-\.)([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,15}
+  " required> </p>
+<p><input type="tel" name="phone" placeholder="Phone Number" > </p>
+<p><input type="password" name="password" placeholder="Password" required> </p>
+<!-- <div id="message">
+  <h3>Password must contain the following:</h3>
+  <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
+  <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
+  <p id="number" class="invalid">A <b>number</b></p>
+  <p id="length" class="invalid">Minimum <b>8 characters</b></p>
+</div> -->
+<button>Sign Up</button>
 
 </form>
 
