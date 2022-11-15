@@ -30,6 +30,7 @@ html,
 body {
   height: 100%;
   background: url('../img/garden-arial.jpg') no-repeat center center fixed;
+  filter: brightness(100%);
   -webkit-background-size: cover;
   -moz-background-size: cover;
   -o-background-size: cover;
@@ -122,6 +123,9 @@ body {
 .cover .btn-lg {
   padding: 10px 20px;
   font-weight: 700;
+}
+.cover-heading{
+  font-size: 3.2em;
 }
 
 
