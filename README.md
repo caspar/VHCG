@@ -23,5 +23,3 @@ The landing page and membership portal pages are designed with distinct interfac
 - Frameworks and Libraries: SQLAlchemy, Skeleton.css, Bootstrap, others
 - APIs: Google Maps API, Google Groups API, Paypal API, Social integrations
 - Hosting and Deployment: Github, Vercel, ImprovMX (for email forwarding)
-
-Copyright 2022 Caspar Lant, Shamin Aggarwal
