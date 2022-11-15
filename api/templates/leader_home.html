@@ -1,54 +1,77 @@
-
-This is the user home!
-//sign up for things here
-//pay dues
-
-<form action="https://www.paypal.com/donate" method="post" target="_top">
-    <!-- Identify your business so that you can collect the payments. -->
-    <input type="hidden" name="business" value="donations@kcparkfriends.org">
-    <!-- Specify details about the contribution -->
-    <input type="hidden" name="no_recurring" value="0">
-    <input type="hidden" name="item_name" value="Friends of the Park">
-    <input type="hidden" name="item_number" value="Fall Cleanup Campaign">
-    <input type="hidden" name="currency_code" value="USD">
-    <!-- Display the payment button. -->
-    <input type="image" name="submit" src="https://www.paypalobjects.com/en_US/i/btn/btn_donate_LG.gif" alt="Donate">
-    <img alt="" width="1" height="1" src="https://www.paypalobjects.com/en_US/i/scr/pixel.gif" >
-   </form>
-
-
 <html>
-  <style>
-    body{ 
-      font-size: 15pt;
-      font-family: arial;
-    }
-  </style>
+<head>
+ <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <meta charset="utf-8">
+ <title>Vinegar Hill Community Garden | Home</title>
+ <!-- <meta name="description" content="">
+ <meta name="author" content=""> -->
+
+ <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+
+ <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <!-- <link rel="stylesheet" href="api/css/normalize.css">
+ <link rel="stylesheet" href="api/css/skeleton.css">
+ <link rel="stylesheet" href="css/custom.css"> -->
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+ <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+ <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
 
 
-<body>
-  <h1>Welcome!</h1>
-  <h2>{{data[1]}}</h2>
-  <!-- <div>{{data}}</div> -->
+ <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
 
-  <!-- <div>
-    {% for n in data %}
-    <div>{{n}}</div>
-    {% endfor %}
-  </div> -->
+ 
+ <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+ 
+ <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <meta name="viewport" content="width=device-width, initial-scale=1.0">
 
-<p><a href="/dues">Pay Dues</a></p>
-<p><a href="/open_hours">Sign up for Open Hours</a></p>
-<p><a href="/workdays">Sign up for Work Days</a></p>
-<p><a href="/plot_waitlist">Apply for Plot</a></p>
-<p><a href="/open_hours_attend">View/Add Open Hours Attendance Record</a></p>
+ <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+ <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+ <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+ <link rel="stylesheet" href="css/github-prettify-theme.css">
+ <script src="js/site.js"></script>
 
-<!-- <form method="POST" action="/login">
-<p>Email: <input type="text" name="email"> </p>
-<p>Phone: <input type="text" name="phone"> </p>
-<p><input type="submit" value="Login"></p>
+</head>
+<body class="code-snippets-visible">
+  
+  <div class="container">
+    <!-- <div class="navbar-spacer"></div> -->
+    <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/signout">💨 Sign Out</a></li>
+          <il class="navbar-item navbar-right"><a class="navbar-link" href="/member_home">📝 Profile</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
 
-</form> -->
+  <div class="container">
+  <h2>Welcome, {{data[1]}}! </h2>
+  </div>
+
+<div class="container">
+  <div class="row">
+      <a class="button button-primary" href="/open_hours">Open Hours Sign-Up</a>
+      <a class="button button-primary" href="/workdays"> Workday Sign-Up</a>
+      <a class="button button-primary" href="/dues">Pay Dues</a>
+  </div>
+  <a class="button" href="/open_hours_attend"> View/Add Open Hours Attendance Record</a>
+  <div class="row">
+    <a class="button" href="/plot_waitlist"> Apply for a Plot</a>
+    <a class="button" href="/change_password"> Change Password</a>
+  </div>
+</div>
+
+
+<div class="container u-max-full-width">
+  <img src="../static/img/garden-diagram.svg">
+</div>
 
 </body>
 
