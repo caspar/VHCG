@@ -272,6 +272,30 @@ def plot_waitlist():
   context = dict(wait_list = waitlist)
   return render_template("plot_waitlist.html", **context)
 
+@app.route('/plot_assignments')
+def plot_assignments():
+  cursor = g.conn.execute("SELECT * From Plots P, Assigned A, Users U WHERE P.plot_id = A.plot_id AND A.uid = U.uid")
+  assign = []
+  for result in cursor:
+    plot = "Plot #" + str(result[0])
+    assigned = " assigned to " + result[7] + " " + result[8] + " (" + str(result[6]) + ") "
+    assign.append(plot+assigned)
+  
+  cursor.close()
+  context = dict(assign_list = assign)
+  return render_template('plot_assignments.html',**context)
+
+@app.route('/assign_plot', methods=['POST'])
+def assign_plot():
+  userid = request.form['uid']
+  plot_id = request.form['plot_id']
+  cmd = 'INSERT INTO Assigned VALUES (DEFAULT,' + str(userid) + ', ' + str(plot_id)+',null)';
+  # try:
+  g.conn.execute(text(cmd));
+  # except:
+  #   print("ERROR Assigning Plot to",uid)
+  return redirect('/plot_assignments')
+
 @app.route('/add_to_waitlist', methods=['POST'])
 def add_to_waitlist():
   cursor = g.conn.execute("SELECT COUNT(*) FROM Plot_Waitlist")
