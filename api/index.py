@@ -271,13 +271,14 @@ def add_to_waitlist():
 @app.route('/add_new_user', methods=['POST'])
 def add_new_user():
   print(request.args)
+  print("Registering New User :",request.form)
   first = request.form['first']
   last = request.form['last']
   email = request.form['email']
   phone = request.form['phone']
   address = request.form['address']
   password = request.form['password']
-  print("Registering New User :",request.form)
+  
   cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))';
   g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password);
   return redirect('/login')
