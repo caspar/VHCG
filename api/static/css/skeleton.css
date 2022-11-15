@@ -51,7 +51,7 @@
 /* For devices larger than 550px */
 @media (min-width: 550px) {
   .container {
-    width: 80%; }
+    width: 90%; }
   .column,
   .columns {
     margin-left: 4%; }
@@ -240,7 +240,8 @@ select {
   border: 1px solid #D1D1D1;
   border-radius: 4px;
   box-shadow: none;
-  box-sizing: border-box; }
+  box-sizing: border-box; 
+  width: 100%}
 /* Removes awkward default styles on some inputs for iOS */
 input[type="email"],
 input[type="number"],
