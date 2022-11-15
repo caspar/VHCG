@@ -1,0 +1,31 @@
+<html>
+  <style>
+    body{ 
+      font-size: 15pt;
+      font-family: arial;
+    }
+  </style>
+
+
+<body>
+  <form action="/home"><input type="submit" value="Go Back"></form>
+  
+  <h1>Open Hours Attendance</h1>
+  <h2>Mark Open Hour Attendance</h2>
+
+  <form method="POST" action="/update_open_hours">
+    <p>uid: <input type="text" name="uid"> hours_id: <input type="text" name="hours_id"> <input type="submit" value="Add"></p>
+  </form>
+    
+  <h2>Open Hours Attendance Records</h2>
+  <div>
+    {% for done in does_list %}
+    <div>{{done}}</div>
+    {% endfor %}
+  </div>
+
+
+</body>
+
+
+</html>
