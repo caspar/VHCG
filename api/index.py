@@ -140,6 +140,11 @@ def login():
   print(request.args)
   return render_template("login.html")
 
+@app.route('/login')
+def login():
+  print(request.args)
+  return render_template("cover.html")
+
 @app.route('/register')
 def register():
   print(request.args)
