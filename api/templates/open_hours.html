@@ -1,25 +1,71 @@
 <html>
-  <style>
-    body{ 
-      font-size: 15pt;
-      font-family: arial;
-    }
-  </style>
-
+  <head>
+    <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta charset="utf-8">
+    <title>Vinegar Hill Community Garden</title>
+    <!-- <meta name="description" content="">
+    <meta name="author" content=""> -->
+    
+    <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
+    
+    <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <!-- <link rel="stylesheet" href="api/css/normalize.css">
+    <link rel="stylesheet" href="api/css/skeleton.css">
+    <link rel="stylesheet" href="css/custom.css"> -->
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
+    <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
+    <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
+    
+    
+    <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
+    
+    
+    <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
+    
+    <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    
+    <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
+    <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
+    <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
+    <link rel="stylesheet" href="css/github-prettify-theme.css">
+    <script src="js/site.js"></script>
+    
+    </head>
 
 <body>
-  <button onclick="back()">Go Back</button>
 
   <script>
   function back() {
     window.history.back();
   }
   </script>
-  
-  <h1>Open Hours</h1>
+
+  <div class="container">
+    <!-- <div class="navbar-spacer"></div> -->
+    <div class="navbar-spacer"></div>
+    <nav class="navbar">
+      <div class="container">
+        <ul class="navbar-list">
+          <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/signout">💨 Sign Out</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/home">🏠 Home</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" onclick="back()">🔙 Go Back</a></li>
+        </ul>
+      </div>
+    </nav>
+  </div>
+
+  <div class="container">
+    <h2>Open Hours Signup</h2>
+  </div>
   <!-- <div>{{data}}</div> -->
 
-  <div>
+
+  <div class="container">
     {% for hour in hour_list %}
     <div>{{hour}}</div>
     {% endfor %}
