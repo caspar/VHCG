@@ -1,13 +1,14 @@
 import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
-from flask import Flask, request, render_template, g, redirect, Response, flash
+from flask import Flask, request, render_template, g, redirect, Response, flash, session
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
 DB_USER = *****
 DB_PASSWORD = ******
+app.secret_key = "vinegar.nyc"
 
 DB_SERVER = *****
 # postgresql://sa4129:Welcome201@w4111project1part2db.cisxo09blonu.us-east-1.rds.amazonaws.com/proj1part2
@@ -140,6 +141,10 @@ def login():
   print(request.args)
   return render_template("login.html")
 
+@app.route('/profile')
+def profile():
+    return 'Profile'
+
 @app.route('/cover')
 def cover():
   print(request.args)
@@ -152,14 +157,13 @@ def register():
 
 @app.route('/dues')
 def dues():
-  global uid
   print(request.args)
   cursor = g.conn.execute("SELECT * FROM Dues")
   dues = []
   print("PRINTING DUES")
   i=1
   for due in cursor:
-    if due[3] == uid:
+    if due[3] == session['uid']:
       print(due)
       managers = g.conn.execute("SELECT first_name, last_name FROM Users WHERE uid = " + str(due[4]))
       due_date = str(due[2].year) + "/" + str(due[2].month) + "/" + str(due[2].day)
@@ -241,7 +245,6 @@ def workdays():
 
 @app.route('/register_work_date')
 def register_work_date():
-  global uid
   print(request.args)
   work_date = request.args.get('work_date', None)
   print("PRINTING WORKDATE!!!")
@@ -249,10 +252,10 @@ def register_work_date():
   # print(type(work_date))
   # print(str(work_date))
   try:
-    cmd = 'INSERT INTO Work_Day_Signups VALUES '+"('"+str(work_date)+"',"+ str(uid)+')';
+    cmd = 'INSERT INTO Work_Day_Signups VALUES '+"('"+str(work_date)+"',"+ str(session['uid'])+')';
     g.conn.execute(text(cmd));
   except:
-    print("Error Signing up:",work_date,uid)
+    print("Error Signing up:",work_date,session['uid'])
 
   return redirect('/workdays')
 
@@ -302,11 +305,11 @@ def add_to_waitlist():
   print("PRINTING WAITLIST LENGTH!!!")
   for num in cursor:
     print(num)
-  cmd = 'INSERT INTO Plot_Waitlist VALUES (' + str(uid) + ', ' + str(num[0]+1)+')';
+  cmd = 'INSERT INTO Plot_Waitlist VALUES (' + str(session['uid']) + ', ' + str(num[0]+1)+')';
   try:
     g.conn.execute(text(cmd));
   except:
-    print("ERROR ADDING TO WAITLIST",uid)
+    print("ERROR ADDING TO WAITLIST",session['uid'])
   return redirect('/plot_waitlist')
 
 @app.route('/add_new_user', methods=['POST'])
@@ -338,7 +341,7 @@ def update_open_hours():
 
 @app.route('/check_login', methods=['POST'])
 def check_login():
-  global uid, mem_uids, lead_uids, user_details
+  global mem_uids, lead_uids, user_details
   print(request.args)
   email = request.form['email']
   password = request.form['password']
@@ -356,14 +359,14 @@ def check_login():
     print(result)
     if result[3] == email and result[6] == password:
       print("Successful login :",result)
-      uid = result[0]
+      session['uid'] = result[0]
       user_details = dict(data = result)
 
-      if uid in lead_uids:
+      if session['uid'] in lead_uids:
         cursor.close()
         return render_template("leader_home.html", **user_details)  
 
-      if uid in mem_uids:
+      if session['uid'] in mem_uids:
         cursor.close()
         return render_template("member_home.html", **user_details)  
       
@@ -377,11 +380,11 @@ def check_login():
 
 @app.route('/home')
 def home():
-  global uid, mem_uids, lead_uids, user_details
-  if uid in lead_uids:
+  global mem_uids, lead_uids, user_details
+  if session['uid'] in lead_uids:
     return render_template("leader_home.html", **user_details)  
 
-  if uid in mem_uids:
+  if session['uid'] in mem_uids:
     return render_template("member_home.html", **user_details)  
   
   else:
