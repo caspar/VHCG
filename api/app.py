@@ -4,6 +4,7 @@ from sqlalchemy import *
 from flask import Flask, request, render_template, g, redirect, Response, flash, session
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
 from werkzeug.security import generate_password_hash, check_password_hash
+from datetime import datetime
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -376,11 +377,31 @@ def admin_panel():
     context = dict(user_list = users)
     return render_template("admin/admin_panel.html", **context)
 
+@app.route('/attendance')
+def attendance():
+  users = []
+  cursor = g.conn.execute("SELECT * FROM Users ORDER BY uid")
+  for user in cursor:
+      users.append(user)
+  context = dict(user_list = users)
+  return render_template("admin/attendance.html", **context)
+
+@app.route('/log_attendance', methods=['GET', 'POST'])
+def log_attendance():
+  date = datetime.today().strftime('%Y-%m-%d')
+  attended = request.form.get('attended')
+  print(attended)
+  uid_update = request.form.get('uid')
+  # cmd = (f'INSERT INTO AttendsMeetings ({date}, {uid})')
+  g.conn.execute(f'INSERT INTO AttendsMeetings VALUES (\'{date}\', \'{uid_update}\')')
+  return redirect('/attendance')
+
+
+
 @app.route('/change_role', methods=['GET','POST'])
 def change_role():
   role = request.form.get('role')
   uid_update = request.form.get('uid')
-  print(str(select))
   cmd = 'UPDATE Users SET Role = (:v1) WHERE uid = (:v2)';
   g.conn.execute(text(cmd), v1 = role, v2 = uid_update)
   return redirect('/admin_panel')
