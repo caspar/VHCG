@@ -1,4 +1,4 @@
 click
-Flask
+Flask==1.1.4
 SQLAlchemy==1.4.43
 Werkzeug==2.2.2
