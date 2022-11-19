@@ -2,6 +2,10 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, flash, session
+from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
+from werkzeug.security import generate_password_hash, check_password_hash
+
+
 # from flask_login import logout_user
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
@@ -20,7 +24,6 @@ DATABASEURI = "postgresql://"+DB_USER+":"+DB_PASSWORD+"@"+DB_SERVER+"/proj1part2
 # This line creates a database engine that knows how to connect to the URI above
 #
 engine = create_engine(DATABASEURI)
-
 
 @app.before_request
 def before_request():
@@ -320,7 +323,7 @@ def add_new_user():
   email = request.form['email']
   phone = request.form['phone']
   address = request.form['address']
-  password = request.form['password']
+  password = generate_password_hash(request.form['password'],  method='sha256', salt_length=8)
   
   cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))';
   g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password);
@@ -338,40 +341,34 @@ def update_open_hours():
 
 @app.route('/check_login', methods=['POST'])
 def check_login():
-  global mem_uids, lead_uids, user_details
+  global user_details
   print(request.args)
   email = request.form['email']
   password = request.form['password']
   print("Submitted Email, password :",email,password)
-  cursor = g.conn.execute("SELECT * FROM Users")
-
-  members = g.conn.execute("SELECT uid FROM Members")
-  mem_uids = [x[0] for x in members]
-  # print("Members :",mem_uids)
-  leaders = g.conn.execute("SELECT uid FROM Leadership")
-  lead_uids = [x[0] for x in leaders]
+  users = g.conn.execute("SELECT * FROM Users")
 
   print("CHECKING LOGIN", flush=True)
-  for result in cursor:
-    print(result)
-    if result[3] == email and result[6] == password:
-      print("Successful login :",result)
-      session['uid'] = result[0]
-      session['role'] = result[7]
-      user_details = dict(data = result)
+  for user in users:
+    print(user)
+    if user[3] == email and check_password_hash(user[6], password):
+      print("Successful login :",user)
+      session['uid'] = user[0]
+      session['role'] = user[7]
+      user_details = dict(data = user)
       return redirect('/home')
 
-  cursor.close()
+  users.close()
   print("Login Unsuccessful!")
   return redirect('/login')
 
 @app.route('/home')
 def home():
-  global mem_uids, lead_uids, user_details
-  if session['uid'] in lead_uids or session['role'] in ['Leader', 'Owner', 'Admin']:
+  global user_details
+  if session['role'] in ['Leader', 'Owner', 'Admin']:
     return render_template("leader_home.html", **user_details)  
 
-  if session['uid'] in mem_uids or session['role'] == 'Member':
+  if session['role'] == 'Member':
     return render_template("member_home.html", **user_details)  
   
   else:
@@ -379,14 +376,36 @@ def home():
 
 @app.route('/admin_panel')
 def admin_panel():
-    print(request.args)
     users = []
-    cursor = g.conn.execute("SELECT * FROM Users")
+    cursor = g.conn.execute("SELECT * FROM Users ORDER BY uid")
     for user in cursor:
       users.append(user)
     context = dict(user_list = users)
     return render_template("admin/admin_panel.html", **context)
 
+@app.route('/change_role', methods=['GET','POST'])
+def change_role():
+  role = request.form.get('role')
+  uid_update = request.form.get('uid')
+  print(str(select))
+  cmd = 'UPDATE Users SET Role = (:v1) WHERE uid = (:v2)';
+  g.conn.execute(text(cmd), v1 = role, v2 = uid_update)
+  return redirect('/admin_panel')
+
+@app.route('/user')
+def user():
+  return render_template("auth/profile.html")
+
+@app.route('/update_info', methods=['GET','POST'])
+def update_info():
+  first    = request.form.get('first')
+  last     = request.form.get('last')
+  email    = request.form.get('email')
+  phone    = request.form.get('phone')
+  address  = request.form.get('address')
+  password = request.form.get('password')
+  g.conn.execute('UPDATE USERS SET first_name {first}, last_name = {last}, email = {email}, phone = {phone}, address ={address}, password = {password}')
+  return redirect('/home')
 
 @app.route('/logout')
 def logout():

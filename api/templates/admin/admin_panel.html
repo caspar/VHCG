@@ -64,6 +64,7 @@
   </div>
   <!-- <div>{{data}}</div> -->
 
+  
   <div class="container" class="collapsible">
   <table class="u-full-width">
     <thead>
@@ -79,28 +80,33 @@
     {% for user in user_list %}
     <!-- <div>{{due}}</div> -->
     <tbody>
+      <form method="POST" action="{{url_for('change_role') }}">
       <tr>
-        <td>{{user[0]}}</td>
+        <td>{{user[0]}} </td>
         <td>{{user[1]}} {{user[2]}}</td>
-        <td><a href="mailto:{{user[3]}}""> {{user[3]}} </a></td>
+        <td><a href="mailto:{{user[3]}}"> {{user[3]}} </a></td>
         <td>{{user[4]}}</td>
         <td>
-          <select name="role" id="role">
-            <option value="current">{{user[7]}}</option>
-            <option value="user">User</option>
-            <option value="member">Member</option>
-            <option value="leader">Leader</option>
-            <option value="leader">Owner</option>
-            <option value="leader">Admin</option>
-          </select>
+            <input type="hidden" name="uid" value ="{{user[0]}}"/>
+            <select type="submit" name="role" id="role" onchange="this.form.submit()">
+              <option value="{{user[7]}}">{{user[7]}}</option>
+              <option value="User">User</option>
+              <option value="Member">Member</option>
+              <option value="Leader">Leader</option>
+              <option value="Owner">Owner</option>
+              <option value="Admin">Admin</option>
+            </select>
         </td>
       </tr>
-     </tbody>
+    </form>
+
+    </tbody>
       
     <!-- <div>{{user[0]}}.) {{user[1]}} {{user[2]}}, {{user[3]}}, {{user[4]}}, {{user[5]}}</div> -->
     {% endfor %}
   </table>
   </div>
+
 
 <!-- <p><a href="/home">Back</a></p> -->
 
