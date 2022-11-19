@@ -15,7 +15,7 @@ The landing page and membership portal pages are designed with distinct interfac
 
 #### Future goals:
  - [ ]  Add content management system (CMS) so tech Luddites can alter the content of the website
-- [ ]  Increase security with password hashing or 3rd party authentication.
+- [x]  Beef up security with password hashing or 3rd party authentication.
 - [ ] Display signups in calendar format with one of many choices of React library
     
 
