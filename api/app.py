@@ -10,14 +10,14 @@ from werkzeug.security import generate_password_hash, check_password_hash
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
-DB_USER = os.getenv('DB_USER')
-DB_PASSWORD = os.getenv('DB_PASSWORD')
-app.secret_key = os.getenv('SECRET_KEY')
+DB_USER=*****
+DB_PASSWORD=******
+SECRET_KEY=*****
+DB_SERVER=*****
 
-DB_SERVER = os.getenv('DB_SERVER')
 # postgresql://sa4129:Welcome201@w4111project1part2db.cisxo09blonu.us-east-1.rds.amazonaws.com/proj1part2
 DATABASEURI = "postgresql://"+DB_USER+":"+DB_PASSWORD+"@"+DB_SERVER+"/proj1part2"
-
+app.secret_key = SECRET_KEY
 
 #
 # This line creates a database engine that knows how to connect to the URI above
