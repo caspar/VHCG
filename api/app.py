@@ -142,10 +142,6 @@ def login():
   print(request.args)
   return render_template("login.html")
 
-@app.route('/profile')
-def profile():
-    return 'Profile'
-
 @app.route('/cover')
 def cover():
   print(request.args)
@@ -389,20 +385,26 @@ def change_role():
   g.conn.execute(text(cmd), v1 = role, v2 = uid_update)
   return redirect('/admin_panel')
 
-@app.route('/user')
-def user():
-  return render_template("auth/profile.html")
+@app.route('/profile')
+def profile():
+  global user_details
+  return render_template("auth/profile.html", **user_details)
 
-@app.route('/update_info', methods=['GET','POST'])
+@app.route('/update_info', methods=['POST'])
 def update_info():
+  uid = session['uid']
   first    = request.form.get('first')
-  last     = request.form.get('last')
+  last     = str(request.form.get('last'))
   email    = request.form.get('email')
   phone    = request.form.get('phone')
-  address  = request.form.get('address')
+  address  = str(request.form.get('address'))
   password = request.form.get('password')
-  g.conn.execute('UPDATE USERS SET first_name {first}, last_name = {last}, email = {email}, phone = {phone}, address ={address}, password = {password}')
-  return redirect('/home')
+  g.conn.execute(f'UPDATE USERS SET first_name = \'{first}\', last_name = \'{last}\', email =\'{email}\', phone = \'{phone}\', address =\'{address}\' WHERE uid = \'{uid}\'')
+  if (password != ''):
+    g.conn.execute(f'UPDATE USERS SET first_name = \'{generate_password_hash(password)}\' WHERE uid = \'{uid}\'')
+  
+  print('done')
+  return redirect('/profile')
 
 @app.route('/logout')
 def logout():

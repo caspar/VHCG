@@ -61,9 +61,8 @@
       <div class="container">
         <ul class="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/register">📝 Sign Up</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/login">🌳 Log In</a></li>
+          <il class="navbar-item navbar-right"><a class="navbar-link" href="/home">🔙 Back</a></li>
+          <il class="navbar-item navbar-right"><a class="navbar-link" href="/logout">💨 Log Out</a></li>
         </ul>
       </div>
     </nav>
@@ -78,26 +77,19 @@
     <form method="POST" action="{{url_for('update_info') }}">
       <div class="row">
         <div class="six columns">
-          <input type="text" name="first" placeholder="{{data[1]}}"required> 
+          First: <input type="text" name="first" value="{{data[1]}}" placeholder="{{data[1]}}"> 
         </div>
         <div class="six columns">
-          <input type="text" name="last" placeholder="{{data[2]}}" >
+          Last: <input type="text" name="last" value="{{data[2]}}" placeholder="{{data[2]}}" >
         </div>
       </div>
       <div class="row">
-        <input type="email" name="email"  placeholder="{{data[3]}}" >
-        <input type="tel" name="phone" placeholder="{{data[4]}}" > 
-        <input type="text" name="address"  placeholder="{{data[5]}}">
-          <input type="password" name="password" placeholder="{{data[6]}}" required> 
+        Email: <input type="email" name="email" value="{{data[3]}}" placeholder="{{data[3]}}" >
+        Phone: <input type="tel" name="phone" value="{{data[4]}}" placeholder="{{data[4]}}" > 
+        Address: <input type="text" name="address"  value="{{data[5]}}" placeholder="{{data[5]}}">
+        Password: <input type="text" name="password" autofill="off" required> 
       </div>
-  <!-- <div id="message">
-    <h3>Password must contain the following:</h3>
-    <p id="letter" class="invalid">A <b>lowercase</b> letter</p>
-    <p id="capital" class="invalid">A <b>capital (uppercase)</b> letter</p>
-    <p id="number" class="invalid">A <b>number</b></p>
-    <p id="length" class="invalid">Minimum <b>8 characters</b></p>
-  </div> -->
-      <button class="button-primary">Update</button>
+      <button class="button-primary" type="submit">Update</button>
     </form>
   </div>
 

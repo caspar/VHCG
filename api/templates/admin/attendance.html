@@ -54,34 +54,49 @@
         <ul class="navbar-list">
           <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
           <li class="navbar-item navbar-right"><a class="navbar-link" href="/logout">💨 Sign Out</a></li>
-          <il class="navbar-item navbar-right"><a class="navbar-link" href="/profile">👤 Profile</a></li>
+          <!-- <il class="navbar-item navbar-right"><a class="navbar-link" href="/member_home">📝 Profile</a></li> -->
         </ul>
       </div>
     </nav>
   </div>
 
   <div class="container">
-  <h2>Welcome, {{data[1]}}! </h2>
+  <h2>Meeting/Workday Attendance</h2>
   </div>
 
-<div class="container">
-  <div class="row">
-      <a class="button button-primary" href="/open_hours">Open Hours Sign-Up</a>
-      <a class="button button-primary" href="/workdays"> Workday Sign-Up</a>
-      <a class="button button-primary" href="/dues">Pay Dues</a>
-  </div>
-  <a class="button" href="/plot_waitlist"> Apply for a Plot</a>
-
-  <div class="row">
-    <a class="button" href="/open_hours_attend"> Admin: Attendance Records</a>
-    <a class="button" href="/plot_assignments"> Admin: Assign Plot to User</a>
-    <a class="button" href="/admin_panel"> Admin: Full User List</a>
-    <!-- <a class="button" href="/change_password"> Change Password</a> -->
-  </div>
-  <div class="row">
-    
-  </div>
-</div>
+  <div class="container" class="collapsible">
+    <table class="u-full-width">
+      <thead>
+        <tr>
+            <th>uid</th>
+            <th>Name</th>
+            <th>Attended?</th>
+        </tr>
+      </thead>
+  
+      {% for user in user_list %}
+      <!-- <div>{{due}}</div> -->
+      <tbody>
+        <form method="POST" action="{{url_for('change_role') }}">
+        <tr>
+          <td>{{user[0]}} </td>
+          <td>{{user[1]}} {{user[2]}}</td>
+          <td><input type="checkbox" name="attended" value="{{user[0]}}" onchange="this.form.submit()"></td>
+          <td>
+              <input type="hidden" name="uid" value ="{{user[0]}}"/>
+              <select type="submit" name="role" id="role" onchange="this.form.submit()">
+                <option value="{{user[7]}}">{{user[7]}}</option>
+                <option value="User">User</option>
+                <option value="Member">Member</option>
+                <option value="Leader">Leader</option>
+                <option value="Owner">Owner</option>
+                <option value="Admin">Admin</option>
+              </select>
+          </td>
+        </tr>
+      </form>
+  
+      </tbody>
 
 
 <div class="container u-max-full-width">
@@ -89,7 +104,12 @@
 </div>
 
 
+<!-- <form method="POST" action="/login">
+<p>Email: <input type="text" name="email"> </p>
+<p>Phone: <input type="text" name="phone"> </p>
+<p><input type="submit" value="Login"></p>
 
+</form> -->
 
 </body>
 
