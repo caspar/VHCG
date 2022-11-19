@@ -3,9 +3,7 @@ from sqlalchemy import *
 # from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, flash, session
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
-from werkzeug.security import generate_password_hash, check_password_hash
-
-# from flask_login import logout_user
+# from werkzeug.security import generate_password_hash, check_password_hash
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -322,7 +320,7 @@ def add_new_user():
   email = request.form['email']
   phone = request.form['phone']
   address = request.form['address']
-  password = generate_password_hash(request.form['password'],  method='sha256', salt_length=8)
+  password = request.form['password']
   
   cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))';
   g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password);
@@ -350,7 +348,7 @@ def check_login():
   print("CHECKING LOGIN", flush=True)
   for user in users:
     print(user)
-    if user[3] == email and check_password_hash(user[6], password):
+    if user[3] == email and user[6] == password:
       print("Successful login :",user)
       session['uid'] = user[0]
       session['role'] = user[7]
