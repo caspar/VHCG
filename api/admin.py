@@ -1,13 +1,13 @@
-from flask import Blueprint, session
+from flask import Blueprint, Flask, request, render_template, g, redirect, Response, flash, session
 from . import db
 
 SECRET_KEY = 'password'.encode('utf8')
 
 auth = Blueprint('auth', __name__)
 
-# @auth.route('/login')
-# def login():
-#     return 'Login'
+@admin.route('/admin_panel')
+def admin_panel():
+    return render_template("admin_panel.html")
 
 # @auth.route('/signup')
 # def signup():

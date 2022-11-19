@@ -47,7 +47,7 @@
           <li class="navbar-item"><a class="navbar-link" href="/">🌱 vinegarhill.garden</a></li>
           <li class="navbar-item navbar-right"><a class="navbar-link" href="https://www.paypal.com/donate/?business=XRMWYD6E9GAGQ&amount=25&no_recurring=4&item_name=Vinegar+Hill+Community+Garden&currency_code=USD">💸 Donate</a></li>
           <li class="navbar-item navbar-right"><a class="navbar-link" href="/home">🔙 Back</a></li>
-          <li class="navbar-item navbar-right"><a class="navbar-link" href="/">💨 Sign Out</a></li>
+          <li class="navbar-item navbar-right"><a class="navbar-link" href="/logout">💨 Sign Out</a></li>
         </ul>
       </div>
     </nav>
@@ -71,7 +71,9 @@
     <details>
       <summary >{{day[0][0]}} : {{day[0][1]}}</summary>
       <a href="{{ url_for('register_work_date', work_date=day[0][0]) }}">Join</a>
-      <p>Currently registered members : {{day[1]}}</p>
+      <div class="row">
+        Currently registered members : {{day[1]}}
+      </div>
     </details>
     {% endfor %}
   </div>

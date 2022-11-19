@@ -60,16 +60,46 @@
   </div>
 
   <div class="container">
-    <h2>Open Hours</h2>
+    <h2>User List</h2>
   </div>
   <!-- <div>{{data}}</div> -->
 
+  <div class="container" class="collapsible">
+  <table class="u-full-width">
+    <thead>
+      <tr>
+        <th>uid</th>
+        <th>Name</th>
+        <th>Email</th>
+        <th>Phone Number</th>
+        <th>Role</th>
+      </tr>
+    </thead>
 
-  <div class="container">
-    {% for hour in hour_list %}
-    <!-- <div>{{hour}}</div> -->
-    <div>{{hour[0]}}. {{hour[1]}}</div>
+    {% for user in user_list %}
+    <!-- <div>{{due}}</div> -->
+    <tbody>
+      <tr>
+        <td>{{user[0]}}</td>
+        <td>{{user[1]}} {{user[2]}}</td>
+        <td><a href="mailto:{{user[3]}}""> {{user[3]}} </a></td>
+        <td>{{user[4]}}</td>
+        <td>
+          <select name="role" id="role">
+            <option value="current">{{user[7]}}</option>
+            <option value="user">User</option>
+            <option value="member">Member</option>
+            <option value="leader">Leader</option>
+            <option value="leader">Owner</option>
+            <option value="leader">Admin</option>
+          </select>
+        </td>
+      </tr>
+     </tbody>
+      
+    <!-- <div>{{user[0]}}.) {{user[1]}} {{user[2]}}, {{user[3]}}, {{user[4]}}, {{user[5]}}</div> -->
     {% endfor %}
+  </table>
   </div>
 
 <!-- <p><a href="/home">Back</a></p> -->

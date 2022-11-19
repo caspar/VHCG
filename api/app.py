@@ -2,6 +2,7 @@ import os
 from sqlalchemy import *
 from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, flash, session
+# from flask_login import logout_user
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -185,9 +186,7 @@ def open_hours():
   print("PRINTING open_hours")
   i=1
   for hour in cursor:
-    slot = str(hour[1].year)+"/"+str(hour[1].month)+"/"+str(hour[1].day) + " - " + str(hour[1].hour)+":"+str(hour[1].minute) + " to " + str(hour[2].hour)+":"+str(hour[2].minute)
-    # print(str(hour[1].year)+"/"+str(hour[1].month)+"/"+str(hour[1].day))
-    # print(str(hour[1].hour)+":"+str(hour[1].minute))
+    slot = str(hour[1].year)+"/"+str(hour[1].month)+"/"+str(hour[1].day) + " - " + str(hour[1].hour)+":"+str(hour[1].minute) + " to " + str(hour[2].hour)+":"+str(hour[2].minute) #formatting
     print(slot)
     open_hours.append((i,slot))
     i = i+1
@@ -327,7 +326,6 @@ def add_new_user():
   g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password);
   return redirect('/login')
 
-
 # Example of adding new data to the database
 @app.route('/update_open_hours', methods=['POST'])
 def update_open_hours():
@@ -337,7 +335,6 @@ def update_open_hours():
   cmd = 'INSERT INTO Does VALUES ((:v1), (:v2))';
   g.conn.execute(text(cmd), v1 = userid, v2 = hours_id);
   return redirect('/open_hours_attend')
-
 
 @app.route('/check_login', methods=['POST'])
 def check_login():
@@ -360,19 +357,9 @@ def check_login():
     if result[3] == email and result[6] == password:
       print("Successful login :",result)
       session['uid'] = result[0]
+      session['role'] = result[7]
       user_details = dict(data = result)
-
-      if session['uid'] in lead_uids:
-        cursor.close()
-        return render_template("leader_home.html", **user_details)  
-
-      if session['uid'] in mem_uids:
-        cursor.close()
-        return render_template("member_home.html", **user_details)  
-      
-      else:
-        cursor.close()
-        return render_template("user_home.html", **user_details)
+      return redirect('/home')
 
   cursor.close()
   print("Login Unsuccessful!")
@@ -381,14 +368,30 @@ def check_login():
 @app.route('/home')
 def home():
   global mem_uids, lead_uids, user_details
-  if session['uid'] in lead_uids:
+  if session['uid'] in lead_uids or session['role'] in ['Leader', 'Owner', 'Admin']:
     return render_template("leader_home.html", **user_details)  
 
-  if session['uid'] in mem_uids:
+  if session['uid'] in mem_uids or session['role'] == 'Member':
     return render_template("member_home.html", **user_details)  
   
   else:
     return render_template("user_home.html", **user_details)
+
+@app.route('/admin_panel')
+def admin_panel():
+    print(request.args)
+    users = []
+    cursor = g.conn.execute("SELECT * FROM Users")
+    for user in cursor:
+      users.append(user)
+    context = dict(user_list = users)
+    return render_template("admin/admin_panel.html", **context)
+
+
+@app.route('/logout')
+def logout():
+    session.pop('uid', None)
+    return redirect('/')
 
 if __name__ == "__main__":
   import click
