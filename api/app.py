@@ -1,6 +1,6 @@
 import os
 from sqlalchemy import *
-from sqlalchemy.pool import NullPool
+# from sqlalchemy.pool import NullPool
 from flask import Flask, request, render_template, g, redirect, Response, flash, session
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
 from werkzeug.security import generate_password_hash, check_password_hash
