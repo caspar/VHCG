@@ -422,7 +422,7 @@ def update_info():
   password = request.form.get('password')
   g.conn.execute(f'UPDATE USERS SET first_name = \'{first}\', last_name = \'{last}\', email =\'{email}\', phone = \'{phone}\', address =\'{address}\' WHERE uid = \'{uid}\'')
   if (password != ''):
-    g.conn.execute(f'UPDATE USERS SET first_name = \'{generate_password_hash(password)}\' WHERE uid = \'{uid}\'')
+    g.conn.execute(f'UPDATE USERS SET password = \'{generate_password_hash(password)}\' WHERE uid = \'{uid}\'')
   
   print('done')
   return redirect('/profile')
