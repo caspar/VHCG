@@ -5,6 +5,9 @@ from flask import Flask, request, render_template, g, redirect, Response, flash,
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
 from werkzeug.security import generate_password_hash, check_password_hash
 from datetime import datetime
+from dotenv import load_dotenv
+
+load_dotenv()
 
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
@@ -14,6 +17,10 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 SECRET_KEY=os.getenv('SECRET_KEY')
 DB_SERVER=os.getenv('DB_SERVER')
 
+print(DB_USER)
+print(DB_PASSWORD)
+print(SECRET_KEY)
+print(DB_SERVER)
 # postgresql://sa4129:Welcome201@w4111project1part2db.cisxo09blonu.us-east-1.rds.amazonaws.com/proj1part2
 DATABASEURI = "postgresql://"+DB_USER+":"+DB_PASSWORD+"@"+DB_SERVER+"/proj1part2"
 app.secret_key = SECRET_KEY
@@ -409,7 +416,7 @@ def change_role():
 @app.route('/profile')
 def profile():
   global user_details
-  return render_template("auth/profile.html", **user_details)
+  return render_template("auth/profile", **user_details)
 
 @app.route('/update_info', methods=['POST'])
 def update_info():
