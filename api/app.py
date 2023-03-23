@@ -1,8 +1,8 @@
 import os
 from datetime import date
-# from sqlalchemy.pool import NullPool
+
 from flask import Flask, g, redirect, render_template, request, session
-from sqlalchemy import create_engine, text, insert
+from sqlalchemy import create_engine, insert, text
 from werkzeug.security import check_password_hash, generate_password_hash
 
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
@@ -15,13 +15,10 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 SECRET_KEY=os.getenv('SECRET_KEY')
 DB_SERVER=os.getenv('DB_SERVER')
 
-# postgresql://sa4129:Welcome201@w4111project1part2db.cisxo09blonu.us-east-1.rds.amazonaws.com/proj1part2
 DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/proj1part2'
 app.secret_key = SECRET_KEY
 
-#
 # This line creates a database engine that knows how to connect to the URI above
-#
 engine = create_engine(DATABASE_URI)
 
 @app.before_request
@@ -325,8 +322,8 @@ def add_new_user():
     address = request.form['address']
     password = generate_password_hash(request.form['password'],  method='sha256', salt_length=8)
 
-    cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))'
-    g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password)
+    cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))' #deprecated in sqlalchemy 2.0
+    g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password) 
     return redirect('/login')
 
 # Example of adding new data to the database
@@ -416,6 +413,7 @@ def change_role():
 def profile():
     global user_details
     return render_template("auth/profile.html", **user_details)
+
 
 @app.route('/update_info', methods=['POST'])
 def update_info():
