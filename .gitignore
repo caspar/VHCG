@@ -1,5 +1,7 @@
 .vercel
+.vscode
 .DS_Store
 package-lock.json
 venv/
+*.ipynb
 __pycache__

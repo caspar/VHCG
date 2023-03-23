@@ -7,6 +7,7 @@ from werkzeug.security import check_password_hash, generate_password_hash
 
 # from flask_user import current_user, login_required, roles_required, UserManager, UserMixin #most of these are not yet implemented
 
+#user has the following format: {'address': , 'email': , 'first_name': , 'last_name': , 'password':, 'phone':, 'role': 'Owner', 'uid': 5}
 tmpl_dir = os.path.join(os.path.dirname(os.path.abspath(__file__)), 'templates')
 app = Flask(__name__, template_folder=tmpl_dir)
 
@@ -338,7 +339,6 @@ def update_open_hours():
 
 @app.route('/check_login', methods=['POST'])
 def check_login():
-    global user_details
     print(request.args)
     email = request.form['email']
     password = request.form['password']
@@ -347,12 +347,11 @@ def check_login():
 
     print("CHECKING LOGIN", flush=True)
     for user in users:
-        print(user)
-        if user[3] == email and (check_password_hash(user[6], password) or password == password): ##in the case of plain-text passwords
+        if user[3] == email and (check_password_hash(user[6], password) or password == password): ##in the case of legacy plain-text passwords
             print("Successful login :",user)
             session['uid'] = user[0]
             session['role'] = user[7]
-            user_details = dict(data = user)
+            session['user_details'] = dict(user)
             return redirect('/home')
 
     users.close()
@@ -361,15 +360,14 @@ def check_login():
 
 @app.route('/home')
 def home():
-    global user_details
     if session['role'] in ['Leader', 'Owner', 'Admin']:
-        return render_template("leader_home.html", **user_details)
+        return render_template("leader_home.html", **session['user_details'])
 
     if session['role'] == 'Member':
-        return render_template("member_home.html", **user_details)
+        return render_template("member_home.html", **session['user_details'])
 
     else:
-        return render_template("user_home.html", **user_details)
+        return render_template("user_home.html", **session['user_details'])
 
 @app.route('/admin_panel')
 def admin_panel():
@@ -411,11 +409,10 @@ def change_role():
 
 @app.route('/profile')
 def profile():
-    global user_details
-    return render_template("auth/profile.html", **user_details)
+    return render_template("profile.html", **session['user_details'])
 
 
-@app.route('/update_info', methods=['POST'])
+@app.route('/update_info', methods=['GET','POST'])
 def update_info():
     uid = session['uid']
     first    = request.form.get('first')
