@@ -16,7 +16,6 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 SECRET_KEY=os.getenv('SECRET_KEY')
 DB_SERVER=os.getenv('DB_SERVER')
 
-DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/proj1part2'
 app.secret_key = SECRET_KEY
 
 # This line creates a database engine that knows how to connect to the URI above
@@ -410,7 +409,6 @@ def change_role():
 @app.route('/profile')
 def profile():
     return render_template("profile.html", **session['user_details'])
-
 
 @app.route('/update_info', methods=['GET','POST'])
 def update_info():
