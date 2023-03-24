@@ -15,6 +15,7 @@ DB_PASSWORD=os.getenv('DB_PASSWORD')
 SECRET_KEY=os.getenv('SECRET_KEY')
 DB_SERVER=os.getenv('DB_SERVER')
 
+DATABASE_URI = f'postgresql://{DB_USER}:{DB_PASSWORD}@{DB_SERVER}/proj1part2'
 app.secret_key = SECRET_KEY
 
 # This line creates a database engine that knows how to connect to the URI above
@@ -416,8 +417,7 @@ def map():
 
     # print the user_1 of b1a
     print('b16: ', userdict[beds['b16'][1]])
-    # get the value of the key 5 in the userdict dictionary
-    # user    
+  
     # a list of all the bed_ids with no user_1 or user_2
     community = g.conn.execute(text("SELECT bed_id FROM beds WHERE user_1 IS NULL AND user_2 IS NULL"))
     # convert qlalchemy.engine.cursor.CursorResult object to list
