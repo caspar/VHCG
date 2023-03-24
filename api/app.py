@@ -1,6 +1,5 @@
 import os
 from datetime import date
-
 from flask import Flask, g, redirect, render_template, request, session
 from sqlalchemy import create_engine, insert, text
 from werkzeug.security import check_password_hash, generate_password_hash
@@ -49,20 +48,6 @@ def teardown_request(exception):
     except:
         pass
 
-
-#
-# @app.route is a decorator around index() that means:
-#   run index() whenever the user tries to access the "/" path using a GET request
-#
-# If you wanted the user to go to e.g., localhost:8111/foobar/ with POST or GET then you could use
-#
-#       @app.route("/foobar/", methods=["POST", "GET"])
-#
-# PROTIP: (the trailing / in the path is important)
-#
-# see for routing: http://flask.pocoo.org/docs/0.10/quickstart/#routing
-# see for decorators: http://simeonfranklin.com/blog/2012/jul/1/python-decorators-in-12-steps/
-#
 @app.route('/')
 def index():
     """
@@ -127,15 +112,6 @@ def index():
     # return render_template("index.html", **context)
     return render_template("cover.html")
 
-
-#
-# This is an example of a different path.  You can see it at
-#
-#     localhost:8111/another
-#
-# notice that the functio name is another() rather than index()
-# the functions for each app.route needs to have different names
-#
 uid = -1
 @app.route('/login')
 # login page
@@ -144,19 +120,16 @@ def login():
     return render_template("login.html")
 
 @app.route('/cover')
-# cover page
 def cover():
     print(request.args)
     return render_template("cover.html")
 
 @app.route('/register')
-# register page
 def register():
     print(request.args)
     return render_template("register.html")
 
 @app.route('/dues')
-# dues page
 def dues():
     print(request.args)
     cursor = g.conn.execute(text("SELECT * FROM Dues"))
@@ -179,7 +152,6 @@ def dues():
     return render_template("dues.html", **context)
 
 @app.route('/open_hours')
-# open hours page
 def open_hours():
     print(request.args)
     cursor = g.conn.execute(text("SELECT * FROM Open_Hours"))
@@ -325,6 +297,10 @@ def add_new_user():
 
     cmd = 'INSERT INTO Users VALUES (DEFAULT, (:v1), (:v2), (:v3), (:v4), (:v5), (:v6))' #deprecated in sqlalchemy 2.0
     g.conn.execute(text(cmd), v1 = first, v2 = last, v3 = email, v4 = phone, v5 = address, v6 = password) 
+
+    # add new user to the dictionary of users
+    generateuserdict()
+
     return redirect('/login')
 
 # Example of adding new data to the database
@@ -352,6 +328,7 @@ def check_login():
             session['uid'] = user[0]
             session['role'] = user[7]
             session['user_details'] = dict(user)
+            print(session['user_details']['address'])
             return redirect('/home')
 
     users.close()
@@ -397,8 +374,6 @@ def log_attendance():
     g.conn.execute(f'INSERT INTO AttendsMeetings VALUES (\'{today}\', \'{uid_update}\')')
     return redirect('/attendance')
 
-
-
 @app.route('/change_role', methods=['GET','POST'])
 def change_role():
     role = request.form.get('role')
@@ -410,7 +385,6 @@ def change_role():
 @app.route('/profile')
 def profile():
     return render_template("profile.html", **session['user_details'])
-
 
 @app.route('/update_info', methods=['GET','POST'])
 def update_info():
@@ -433,6 +407,42 @@ def logout():
         session.pop('uid', None)
         return redirect('/')
 
+@app.route('/map')
+def map():
+    generateuserdict()
+    cmd = 'SELECT * FROM beds'
+    beds = g.conn.execute(text(cmd))
+    # convert qlalchemy.engine.cursor.CursorResult object to dictionary where bed_id is the key and the value is a list of the bed's info
+    beds = {row[0]:[row[1],row[2],row[3]] for row in beds}
+
+    # print the user_1 of b1a
+    print('b16: ', userdict[beds['b16'][1]])
+    # get the value of the key 5 in the userdict dictionary
+    # user    
+    # a list of all the bed_ids with no user_1 or user_2
+    community = g.conn.execute(text("SELECT bed_id FROM beds WHERE user_1 IS NULL AND user_2 IS NULL"))
+    # convert qlalchemy.engine.cursor.CursorResult object to list
+    community = [row[0] for row in community]
+    # all the beds where user_1 is not null and user_2 is not null
+    cogarden = g.conn.execute(text("SELECT bed_id FROM beds WHERE user_1 IS NOT NULL AND user_2 IS NOT NULL"))
+    cogarden = [row[0] for row in cogarden]
+
+    return render_template("map.html", community=community, cogarden=cogarden, beds=beds)
+    # make a dictionary where bedid is the key and the value is a list of the bed's info
+
+def generateuserdict():
+    # make a global dictionary of users where the key is the uid and the value is the first_name and last_name concatenated if not null
+    cmd = text("SELECT uid, first_name, last_name FROM Users")
+    global userdict
+    userdict = g.conn.execute(cmd)
+    userdict = {row[0]: row[1] + (' ' + row[2] if row[2] is not None else '') for row in userdict}
+
+def generatebeddict():
+    # make a global dictionary of beds where the key is the bed_id and the value is the bed's info
+    cmd = text("SELECT bed_id, user_1, user_2 FROM beds")
+    beds = g.conn.execute(cmd)
+    beds = {row[0]:[row[1],row[2]] for row in beds}
+    
 if __name__ == "__main__":
     import click
 
@@ -458,5 +468,7 @@ if __name__ == "__main__":
         print("running on %s:%d" % (HOST, PORT))
         app.run(host=HOST, port=PORT, debug=debug, threaded=threaded)
 
+        # make a global dictionary of users where the key is the uid and the value is the first_name
+        generateuserdict()
 
     run()
