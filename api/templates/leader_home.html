@@ -1,49 +1,7 @@
-<html>
-<head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-F1GVXWZH2D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
+{% extends "head.html" %}
+{% block title %}VHCG | Home{% endblock %}
 
-  gtag('config', 'G-F1GVXWZH2D');
-</script>
- <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <meta charset="utf-8">
- <title>Vinegar Hill Community Garden | Home</title>
- <!-- <meta name="description" content="">
- <meta name="author" content=""> -->
-
- <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-
- <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <!-- <link rel="stylesheet" href="api/css/normalize.css">
- <link rel="stylesheet" href="api/css/skeleton.css">
- <link rel="stylesheet" href="css/custom.css"> -->
- <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
- <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
- <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
- <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
-
-
- <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
-
- 
- <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
- 
- <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
- <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
- <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
- <link rel="stylesheet" href="css/github-prettify-theme.css">
- <script src="js/site.js"></script>
-
-</head>
+{% block body %}
 <body class="code-snippets-visible">
   
   <div class="container">
@@ -79,7 +37,7 @@
     <!-- <a class="button" href="/change_password"> Change Password</a> -->
   </div>
   <div class="row">
-    
+    <a class="button" href="map"> Map</a>
   </div>
 </div>
 
@@ -92,7 +50,4 @@
 
 
 </body>
-
-
-</html>
-
+{% endblock %}

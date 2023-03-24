@@ -1,49 +1,8 @@
-<html>
+{% extends "head.html" %}
+{% block title %}VHCG | Home{% endblock %}
+
+{% block body %}
 <head>
-  <!-- Google tag (gtag.js) -->
-<script async src="https://www.googletagmanager.com/gtag/js?id=G-F1GVXWZH2D"></script>
-<script>
-  window.dataLayer = window.dataLayer || [];
-  function gtag(){dataLayer.push(arguments);}
-  gtag('js', new Date());
-
-  gtag('config', 'G-F1GVXWZH2D');
-</script>
- <!-- Basic Page Needs –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <meta charset="utf-8">
- <title>Vinegar Hill Community Garden | Home</title>
- <!-- <meta name="description" content="">
- <meta name="author" content=""> -->
-
- <!-- FONT –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <link href='//fonts.googleapis.com/css?family=Raleway:400,300,600' rel='stylesheet' type='text/css'>
-
- <!-- CSS –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <!-- <link rel="stylesheet" href="api/css/normalize.css">
- <link rel="stylesheet" href="api/css/skeleton.css">
- <link rel="stylesheet" href="css/custom.css"> -->
- <link rel="stylesheet" href="{{ url_for('static', filename='css/normalize.css') }}">
- <link rel="stylesheet" href="{{ url_for('static', filename='css/skeleton.css') }}">
- <link rel="stylesheet" href="{{ url_for('static', filename='css/custom.css') }}">
- <!-- <link href="https://cdn.jsdelivr.net/npm/bootstrap@5.2.2/dist/css/bootstrap.min.css" rel="stylesheet" integrity="sha384-Zenh87qX5JnK2Jl0vWa8Ck2rdkQ2Bzep5IDxbcnCeuOxjzrPF/et3URy9Bv1WTRi" crossorigin="anonymous"> -->
-
-
- <!-- <link rel="stylesheet" href="{{ url_for('static', filename='css/light.css') }}"> -->
-
- 
- <!-- Favicon –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 100 100%22><text y=%22.9em%22 font-size=%2290%22>🌱</text></svg>">
- 
- <!-- Mobile Specific Metas –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <meta name="viewport" content="width=device-width, initial-scale=1.0">
-
- <!-- Scripts –––––––––––––––––––––––––––––––––––––––––––––––––– -->
- <script src="//ajax.googleapis.com/ajax/libs/jquery/2.1.1/jquery.min.js"></script>
- <script src="https://google-code-prettify.googlecode.com/svn/loader/run_prettify.js"></script>
- <link rel="stylesheet" href="css/github-prettify-theme.css">
- <script src="js/site.js"></script>
-
- <!-- Style -->
  <style>.cls-1, .text-bed, .text-pathway, .text-bed, .cls-5, .text-shed{font-family: ArialMT, Arial;}.cls-7{letter-spacing: -.04em;}.cls-8{fill: #a6a7d4; stroke-linecap: square;}.cls-8, .text-pathway, .cls-9, .cls-10, .cls-11, .bed{stroke: #231f20; stroke-miterlimit: 10;}.cls-8, .cls-9, .cls-10, .cls-11, .bed{stroke-width: .2px;}.text-bed{font-size: 30.59px;}.text-bed, .text-pathway, .cls-13, .text-bed, .cls-5, .text-shed, .cls-14{fill: #231f20;}.text-pathway{font-size: 25.19px; stroke-width: .2px;}.cls-15{fill: #a9dff3;}.cls-16{fill: #4cbc88;}.text-bed{font-size: 31.71px;}.cls-9{fill: #f79562;}.cls-10{fill: #b1c1c9;}.cls-11{fill: #cd79b2;}.cls-5{font-size: 36.74px;}.bed{fill: #f8f5b6;}.cls-17{letter-spacing: -.07em;}.text-shed{font-size: 39.75px;}.cls-18{font-family: MyriadPro-Regular, 'Myriad Pro'; letter-spacing: 0em;}.cls-14{font-size: 25.1px;}{% for bed in community %}#{{bed}}{{"{"}}fill: #f79562;{{"}"}}{% endfor %}{% for bed in cogarden %}#{{bed}}{{"{"}}fill: #EE2A7B;{{"}"}}{% endfor %}/* Overlay window styles */#overlay{/* position above cursor on click */ position: absolute;top: 0;left: 0;width: 100%;height: 100%;background-color: rgba(0,0,0,0.5);display: none;align-items: center;justify-content: center;}#overlay-content{background-color: white;padding: 20px;border-radius: 5px;max-width: 80%;max-height: 80%;overflow: auto;box-shadow: 0 0 10px rgba(0,0,0,0.5);}#overlay-close{/* background-color: black; */position: absolute;top: 0;right: 0;padding: 10px;cursor: pointer;}/* Bed styles */.bed{cursor: pointer;}</style>
 </head>
 <body class="code-snippets-visible">
@@ -192,16 +151,83 @@
 </div>
 <div id="overlay">
   <div id="overlay-content">
-    {{beds.b16}}
-    Bed: <h2 id="bed-id"></h2>
-    <p id="bed-owners"></p>
-    {{beds[0]}}
-    hello
-    <div id="overlay-close">
-              X
-          </div>
-  </div>
+    <h2 id="bed-id"></h2>
+    <!-- get the first name of the user from users dictionary -->
+
+    <form method="POST" action="{{url_for('change_bed_assignment') }}">
+        <input type="hidden" name="bed_id" id="bed_id">
+        User 1:
+        <select name="user_1" onchange="this.form.submit()">
+            <option id="user_1" name="user_1_name"></option>
+            <option value="NULL">None</option>
+            {% for user in users %}
+                <option value="{{user}}">{{users[user]}}</option>
+            {% endfor %}
+        </select>
+        User 2:
+        <select name="user_2" onchange="this.form.submit()">
+            <option id="user_2" name="user_2_name"></option>
+            <option value="NULL">None</option>
+            {% for user in users %}
+                <option value="{{user}}">{{users[user]}}</option>
+            {% endfor %}
+        </select>
+        <!-- <input type="submit" value="Submit"> -->
+    </form>
 </div>
-<script src="{{ url_for('static', filename='js/overlay.js') }}"></script>
-</body>
-</html>
+
+<!-- overlay that allows you to assign users to a bed -->
+
+
+<!-- <script src="{{ url_for('static', filename='js/overlay.js') }}"></script> -->
+<script>
+    window.addEventListener('click', function (event) {
+        if (event.target == overlay) {
+            overlay.style.display = 'none';
+        }
+    });
+
+    var beds = {{ beds| tojson}};
+    var users = {{ users| tojson}};
+    console.log(beds);
+    var bed = document.getElementsByClassName("bed");
+    for (var i = 0; i < bed.length; i++) {
+        bed[i].addEventListener("click", function () {
+            var bedId = this.id;
+            var bedsize = beds[bedId][0];
+
+            var user_1 = beds[bedId][1];
+            var user_2 = beds[bedId][2];
+
+            var user_1_name = users[user_1];
+            var user_2_name = users[user_2];
+
+            document.getElementById("bed-id").innerHTML = "Bed " + bedId.substring(1);
+            document.getElementById("bed_id").value = bedId //awful sorry 
+
+            if (users[user_1]) { 
+                document.getElementById("user_1").innerHTML = users[user_1]; 
+                document.getElementById("user_1").value = user_1; 
+                console.log(users[user_1])
+            }
+            else {
+                document.getElementById("user_1").innerHTML = "None";
+                document.getElementById("user_1").value = "Null";
+            }
+
+            if (users[user_2]) {
+                document.getElementById("user_2").innerHTML = users[user_2];
+                document.getElementById("user_2").value = user_2;
+            }
+            else {
+                document.getElementById("user_2").innerHTML = "None";
+                document.getElementById("user_2").value = "Null";
+            }
+            document.getElementById("overlay").style.display = "flex";
+        });
+    }
+    document.getElementById("overlay-close").addEventListener("click", function () {
+        document.getElementById("overlay").style.display = "none";
+    }); 
+</script>
+{% endblock %}

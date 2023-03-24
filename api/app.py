@@ -337,6 +337,9 @@ def check_login():
 
 @app.route('/home')
 def home():
+    # go to the root page if not logged in
+    if 'uid' not in session:
+        return redirect('/')
     if session['role'] in ['Leader', 'Owner', 'Admin']:
         return render_template("leader_home.html", **session['user_details'])
 
@@ -416,7 +419,8 @@ def map():
     beds = {row[0]:[row[1],row[2],row[3]] for row in beds}
 
     # print the user_1 of b1a
-    print('b16: ', userdict[beds['b16'][1]])
+    for user in userdict:
+        print(userdict[user])
   
     # a list of all the bed_ids with no user_1 or user_2
     community = g.conn.execute(text("SELECT bed_id FROM beds WHERE user_1 IS NULL AND user_2 IS NULL"))
@@ -426,12 +430,23 @@ def map():
     cogarden = g.conn.execute(text("SELECT bed_id FROM beds WHERE user_1 IS NOT NULL AND user_2 IS NOT NULL"))
     cogarden = [row[0] for row in cogarden]
 
-    return render_template("map.html", community=community, cogarden=cogarden, beds=beds)
+    return render_template("map.html", community=community, cogarden=cogarden, beds=beds, users=userdict)
     # make a dictionary where bedid is the key and the value is a list of the bed's info
+
+@app.route('/change_bed_assignment', methods=['GET','POST'])
+def change_bed_assignment():
+    bed_id = request.form.get('bed_id')
+    user_1 = request.form.get('user_1')
+    user_2 = request.form.get('user_2')
+
+    # change the bed's user_1 and user_2
+    cmd =f'UPDATE beds SET user_1 = {user_1}, user_2 = {user_2} WHERE bed_id = \'{bed_id}\''
+    g.conn.execute(text(cmd))
+    return redirect('/map')
 
 def generateuserdict():
     # make a global dictionary of users where the key is the uid and the value is the first_name and last_name concatenated if not null
-    cmd = text("SELECT uid, first_name, last_name FROM Users")
+    cmd = text("SELECT uid, first_name, last_name FROM Users ORDER BY first_name")
     global userdict
     userdict = g.conn.execute(cmd)
     userdict = {row[0]: row[1] + (' ' + row[2] if row[2] is not None else '') for row in userdict}
